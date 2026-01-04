@@ -222,10 +222,7 @@ This project is open source and available for educational purposes.
 ---
 
 ## 👨‍💻 Author
-
 **Yazid TAHIRI ALAOUI**  
-Filière ID1 - ENSAH  
-Université Abdelmalek Essaadi
 
 ---
 
