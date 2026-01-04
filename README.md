@@ -13,10 +13,6 @@ A **lexical analyzer** for a custom **AFD (Automate Fini Déterministe / Determi
 This project implements a **lexical scanner** that tokenizes source code written in a custom domain-specific language (DSL) for defining deterministic finite automata. The language allows users to specify automata components including states, alphabets, transitions, and verification rules in a clean, human-readable syntax.
 
 **Author**: Yazid TAHIRI ALAOUI  
-**Course**: Théorie des langages et compilation  
-**Program**: ID1  
-**Assignment**: TP2 - Analyseur Lexical
-
 ---
 
 ## ✨ Features
