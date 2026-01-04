@@ -227,7 +227,4 @@ This project is open source and available for educational purposes.
 ---
 
 ## 🙏 Acknowledgments
-
-- Course: Théorie des langages et compilation
-- Institution: ENSAH - École Nationale des Sciences Appliquées d'Al Hoceima
 - Tools: Flex (The Fast Lexical Analyzer)
