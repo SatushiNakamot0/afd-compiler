@@ -1,0 +1,17 @@
+
+
+automate MonAutomate1 { 
+
+    alphabet = {a, b, c};
+    etats = {q0, q1, q_final};
+
+    initial = q0;
+    finaux = {q_final};
+    
+    transitions = { 
+        q0:a->q1;  
+        q1:b->q_final; 
+        q_final:c->q0; 
+    };
+    
+}

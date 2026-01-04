@@ -1,0 +1,23 @@
+Nom : Yazid TAHIRI ALAOUI
+Module : Théorie des langages et compilation
+TP2 : Propositions d’amélioration
+
+Afin de répondre à la dernière question du TP, j'ai relevé quelques points qui pourraient être améliorés pour qu'un analyseur soit bien plus efficace, en m'appuyant sur ce qu'on a entendu au cours.
+
+1. Le positionnement précis des erreurs (Ligne, Colonne)
+
+    En ce moment, dans mon programme, j'enregistre le nombre de lignes, mais s'il y a une erreur au milieu de chaque ligne qui pourrait être très longue.
+    Proposition : Il faudrait ajouter un compteur de colonnes. En effet, comme dans le cours, on met la colonne à 1 lorsque l'on saute dans une ligne, mais on l'incrémente chaque mot lu. Ça m'aiderait donc à afficher : "Erreur ligne 10, colonne 5".
+
+2. Substitutions de printf en return
+
+    Dans mon code, j'utilise printf pour imprimer ce dont je découvre la signification (par exemple, "MOT_CLE : automate"). Ça marche bien pour vérifier.
+    Proposition : Si l'on veut avoir un vrai compilateur, il faut que yylex() donne la valeur de cet "indice" entier au parser, au lieu de n'imprimer que de text. 
+    On devrait donc établir certains codes pour AUTOMATE, comme "AUTOMATE = 256," au lieu de printf.
+
+3. Meilleur management des guil
+
+    Le TP consiste à vérifier les mots "ab". Enfin, pour l'instant, j'analyse tout seul le guillemet ("").
+    Proposition : Il serait plus facile de définir une règle qui récolte la totalité d’un mot en un seul coup, en disant “[a-z] +”. 
+    De cette manière, on peut récupérer tout le mot entier sans avoir besoin de le reconstruire. 4. Table of Symbols Mon analyseur affiche juste "IDENTIFIANT" lorsque c'est le nom d'état qu'il voir ("q0"). 
+    Mais il n'en retient pas le nom. Proposition : Il serait nécessaire de conserver les noms de l’état et de l' automate dans une table de symboles pour enfin être en mesure de vérifier plus tard si cet événement a été défini.
