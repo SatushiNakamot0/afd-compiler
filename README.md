@@ -1,4 +1,4 @@
-# 🤖 AFD Compiler
+#  AFD Compiler
 
 A **lexical analyzer** for a custom **AFD (Automate Fini Déterministe / Deterministic Finite Automaton)** description language, built with **Flex** for the Theory of Languages and Compilation course at **Université Abdelmalek Essaadi - ENSAH**.
 
@@ -8,24 +8,24 @@ A **lexical analyzer** for a custom **AFD (Automate Fini Déterministe / Determi
 
 ---
 
-## 📖 Overview
+##  Overview
 
 This project implements a **lexical scanner** that tokenizes source code written in a custom domain-specific language (DSL) for defining deterministic finite automata. The language allows users to specify automata components including states, alphabets, transitions, and verification rules in a clean, human-readable syntax.
 
 **Author**: Yazid TAHIRI ALAOUI  
 ---
 
-## ✨ Features
+##  Features
 
-- ✅ **Complete Lexical Analysis** - Tokenizes all language constructs
-- ✅ **Error Detection** - Reports unknown characters with line numbers
-- ✅ **Comment Support** - Handles single-line comments starting with `#`
-- ✅ **Identifier Recognition** - Validates state and automaton names
-- ✅ **Symbol Classification** - Distinguishes keywords, operators, and delimiters
+- **Complete Lexical Analysis** - Tokenizes all language constructs
+- **Error Detection** - Reports unknown characters with line numbers
+- **Comment Support** - Handles single-line comments starting with `#`
+- **Identifier Recognition** - Validates state and automaton names
+- **Symbol Classification** - Distinguishes keywords, operators, and delimiters
 
 ---
 
-## 🔤 Language Specification
+## Language Specification
 
 ### Keywords
 | Keyword | Description |
@@ -57,7 +57,7 @@ This project implements a **lexical scanner** that tokenizes source code written
 
 ---
 
-## 📝 Example
+## Example
 
 Here's a sample automaton description (`exemple.txt`):
 
@@ -87,7 +87,7 @@ This defines an automaton that:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - **Flex** (Fast Lexical Analyzer)
@@ -139,7 +139,7 @@ SYMBOLE : ;
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 afd-compiler/
@@ -154,40 +154,40 @@ afd-compiler/
 
 ---
 
-## 🎯 Development Roadmap
+## Development Roadmap
 
 ### Current Status
-- ✅ **Phase 1: Lexical Analysis** (Complete)
+- **Phase 1: Lexical Analysis** (Complete)
 
 ### Planned Improvements
 
 Based on the analysis documented in `Propositions d'améliorations.txt`:
 
-1. **📍 Precise Error Positioning**
+1. **Precise Error Positioning**
    - Add column tracking for errors
    - Display: `Error at line X, column Y`
 
-2. **🔗 Parser Integration**
+2. **Parser Integration**
    - Return token codes instead of printing
    - Enable integration with Bison/Yacc parser
    - Define token codes: `AUTOMATE = 256`, etc.
 
-3. **📜 Better String Handling**
+3. **Better String Handling**
    - Capture quoted words in a single token
    - Pattern: `"[a-z]+"`
 
-4. **🗂️ Symbol Table**
+4. **Symbol Table**
    - Store identifiers (states, automaton names)
    - Enable semantic validation
 
-5. **🔮 Future Phases**
+5. **Future Phases**
    - Phase 2: Syntax Analysis (Bison parser)
    - Phase 3: Semantic Analysis
    - Phase 4: Automaton Simulation & Word Verification
 
 ---
 
-## 🧪 Testing
+## Testing
 
 To test with your own automaton:
 
@@ -197,7 +197,7 @@ To test with your own automaton:
 
 ---
 
-## 📚 Learning Resources
+## Learning Resources
 
 This project demonstrates concepts from:
 - **Formal Languages** - Regular expressions, finite automata
@@ -206,7 +206,7 @@ This project demonstrates concepts from:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is an educational project, but suggestions and improvements are welcome! Feel free to:
 - Open an issue for bugs or questions
@@ -215,16 +215,16 @@ This is an educational project, but suggestions and improvements are welcome! Fe
 
 ---
 
-## 📄 License
+## License
 
 This project is open source and available for educational purposes.
 
 ---
 
-## 👨‍💻 Author
-**Yazid TAHIRI ALAOUI**  
+## Author
+Yazid TAHIRI ALAOUI  
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 - Tools: Flex (The Fast Lexical Analyzer)
