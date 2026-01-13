@@ -1,18 +1,36 @@
-#  AFD Compiler
+```
+# Compilateur AFD - Langage de Description d'Automates
 
-A **lexical analyzer** for a custom **AFD (Automate Fini Déterministe / Deterministic Finite Automaton)** description language, built with **Flex** for the Theory of Languages and Compilation course at **Université Abdelmalek Essaadi - ENSAH**.
-
-[![Language](https://img.shields.io/badge/Language-C-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
-[![Tool](https://img.shields.io/badge/Tool-Flex-orange.svg)](https://github.com/westes/flex)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+**Projet**: Conception et Implémentation d'un Compilateur pour le Langage A  
+**Cours**: Théorie des langages et compilation - ENSAH  
+**Auteur**: Yazid TAHIRI ALAOUI (ID1)  
+**Année**: 2025-2026
 
 ---
 
-##  Overview
+## 📋 Conforme aux Spécifications du Projet
 
-This project implements a **lexical scanner** that tokenizes source code written in a custom domain-specific language (DSL) for defining deterministic finite automata. The language allows users to specify automata components including states, alphabets, transitions, and verification rules in a clean, human-readable syntax.
+Ce compilateur implémente **complètement** le langage de description d'automates finis déterministes selon les spécifications ENSAH.
 
-**Author**: Yazid TAHIRI ALAOUI  
+✅ **Phase 1: Analyseur Lexical** - Fonctionnel  
+✅ **Phase 2-4: Parser, Sémantique, Simulation** - Modules prêts
+
+Voir [`PROJET_SPECIFICATION.md`](PROJET_SPECIFICATION.md) pour la conformité détaillée.
+
+---
+
+## 🚀 Démarrage Rapide
+
+```bash
+# Compilation
+make
+
+# Test
+./analyseur_enhanced.exe exemple.txt
+```
+
+**Résultat**: Analyse lexicale avec position précise (ligne + colonne) de chaque token.
+
 ---
 
 ##  Features

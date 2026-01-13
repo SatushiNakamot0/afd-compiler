@@ -1,0 +1,5 @@
+Comme convenu lors de la dernière séance de TP, ce TP constitue la première partie du projet que nous allons réaliser. Vous devez uploader un fichier .zip contenant le dossier avec tous les fichiers nécessaires, répondant aux tâches du TP, ainsi qu’un fichier .txt dans lequel vous préciserez les améliorations sur lesquelles vous comptez travailler.
+
+Ce projet sera un travail d’équipe, mais les améliorations que vous proposerez représenteront votre signature personnelle, votre touche. Soyez donc créatifs.
+
+IMPORTANT : L’utilisation de l’IA, de codes ou de méthodes que vous ne comprenez pas est strictement interdite dans notre équipe travaillant sur ce projet. Si je détecte l’utilisation de l’IA, de codes ou méthodes que vous ne maîtrisez pas, à n’importe quelle phase du projet, vous serez exclus de l’équipe. Vous continuerez alors à travailler seul, et vos futurs uploads du projet ne seront ni consultés ni corrigés.

@@ -1,91 +1,66 @@
-# Makefile pour Compilateur AFD
+# Makefile pour Compilateur AFD - Version Simplifiée TP2/TP3
 # Yazid TAHIRI ALAOUI - ENSAH
 
-# Compilateurs o flags
 CC = gcc
 FLEX = flex
 BISON = bison
 
-# Flags dyal compilation
 CFLAGS = -Wall -g -I.
-LDFLAGS = -lfl
 
-# Fichiers source
-LEX_SRC = analyseur_enhanced.l
-YACC_SRC = analyseur.y
-C_SRCS = symbol_table.c ast.c simulateur.c
-
-# Fichiers générés
-LEX_GEN = lex.yy.c
-YACC_GEN = analyseur.tab.c analyseur.tab.h
-
-# Fichiers objet
-OBJS = analyseur.tab.o lex.yy.o symbol_table.o ast.o simulateur.o
-
-# Nom dyal executable
-TARGET = compilateur_afd
-
-# Règle par défaut - kolchi
-all: $(TARGET)
+# Target principal
+all: afd_compiler
+	@echo ""
 	@echo "✅ Compilation terminée!"
-	@echo "▶️  Exécutez: ./$(TARGET) [fichier.txt]"
+	@echo "▶️  Exécutez: ./afd_compiler [fichier.txt]"
+	@echo ""
 
-# Règle bash ndirou l executable
-$(TARGET): $(OBJS)
-	@echo "🔗 Linking..."
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
+# Compilation du compilateur AFD
+afd_compiler: parser.tab.c lex.yy.c
+	@echo "📦 Compilation finale..."
+	$(CC) $(CFLAGS) parser.tab.c lex.yy.c -o afd_compiler
+	@echo "✅ Compilateur AFD créé!"
 
-# Génération dyal parser mn Bison
-analyseur.tab.c analyseur.tab.h: $(YACC_SRC)
-	@echo "🔨 Bison: Génération du parser..."
-	$(BISON) -d $(YACC_SRC)
+# Génération du parser avec Bison
+parser.tab.c: parser.y
+	@echo "� Bison: Génération du parser..."
+	$(BISON) -d parser.y
 
-# Génération dyal lexer mn Flex
-lex.yy.c: $(LEX_SRC) analyseur.tab.h
+# Génération du lexer avec Flex
+lex.yy.c: lexer.l parser.tab.h
 	@echo "🔨 Flex: Génération du lexer..."
-	$(FLEX) $(LEX_SRC)
+	$(FLEX) lexer.l
 
-# Compilation dyal fichiers C
-%.o: %.c
-	@echo "📦 Compilation de $<..."
-	$(CC) $(CFLAGS) -c $< -o $@
+# Test avec le fichier exemple
+test: afd_compiler
+	@echo "🧪 Test avec exemple.txt..."
+	@echo ""
+	./afd_compiler exemple.txt
 
-# Build simple (version originale sans parser)
-simple: analyseur.l
-	@echo "🔨 Build version simple (lexer only)..."
-	$(FLEX) analyseur.l
-	$(CC) $(CFLAGS) lex.yy.c -o analyseur_simple $(LDFLAGS)
-	@echo "✅ Fait! Exécutez: ./analyseur_simple"
-
-# Clean - n9adhfo fichiers générés
+# Nettoyage
 clean:
 	@echo "🧹 Nettoyage..."
-	rm -f $(OBJS) $(LEX_GEN) $(YACC_GEN) $(TARGET) analyseur_simple
+	rm -f lex.yy.c parser.tab.c parser.tab.h *.o afd_compiler
 	@echo "✅ Nettoyé!"
 
-# Rebuild - clean + all
+# Rebuild
 rebuild: clean all
 
-# Test m3a exemple.txt
-test: $(TARGET)
-	@echo "🧪 Test avec exemple.txt..."
-	./$(TARGET) exemple.txt
-
-# Affichage dyal help
+# Aide
 help:
-	@echo "Makefile pour Compilateur AFD"
-	@echo "=============================="
+	@echo "╔═══════════════════════════════════════════════════════╗"
+	@echo "║   Makefile - Compilateur AFD (TP2/TP3)               ║"
+	@echo "╚═══════════════════════════════════════════════════════╝"
 	@echo ""
-	@echo "Commandes disponibles:"
-	@echo "  make          - Compile tout (lexer + parser + simulator)"
-	@echo "  make simple   - Compile version simple (lexer seul)"
-	@echo "  make test     - Compile et teste avec exemple.txt"
-	@echo "  make clean    - Supprime fichiers générés"
+	@echo "🎯 Cibles:"
+	@echo "  make          - Compile le compilateur AFD"
+	@echo "  make test     - Test avec exemple.txt"
+	@echo "  make clean    - Nettoie fichiers générés"
 	@echo "  make rebuild  - Clean + recompile"
-	@echo "  make help     - Affiche cette aide"
 	@echo ""
-	@echo "Utilisation:"
-	@echo "  ./$(TARGET) [fichier.txt]"
-	@echo "  ./analyseur_simple          (version simple)"
+	@echo "📁 Fichiers du projet:"
+	@echo "  lexer.l    - Analyseur lexical (Flex)"
+	@echo "  parser.y   - Analyseur syntaxique (Bison)"
+	@echo "  def.h      - Définitions des structures DFA"
+	@echo ""
 
-.PHONY: all clean rebuild test help simple
+.PHONY: all test clean rebuild help

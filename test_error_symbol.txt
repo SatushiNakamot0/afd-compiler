@@ -1,0 +1,10 @@
+# Test: Undefined symbol in transition
+automate ErrorTest1 {
+    alphabet = {a, b};
+    etats = {q0, q1};
+    initial = q0;
+    finaux = {q1};
+    transitions = {
+        q0:x->q1;
+    };
+}
