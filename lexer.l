@@ -3,7 +3,7 @@
 #include "def.h"
 #include <string.h>
 
-// hna dert amelioration lewla dyal suivi des lignes 
+// hna dert amelioration dyal suivi des lignes et colonnes
 int nb_colonne = 1;
 %}
 
@@ -12,9 +12,11 @@ int nb_colonne = 1;
 
 %%
 
-[ \t]+                { nb_colonne += strlen(yytext); }
-\n                    { nb_colonne = 1; }
-#.*                   { }
+[ \t]+                { nb_colonne += strlen(yytext); /* Ignorer les espaces */ }
+
+\n                    { nb_colonne = 1; /* rje3 l star jdid */ }
+
+#.*                   { /* Commentaire : on fait rien */ }
 
 "automate"            { nb_colonne += 9; return TOK_AUTOMATE; }
 "alphabet"            { nb_colonne += 8; return TOK_ALPHABET; }
@@ -29,6 +31,8 @@ int nb_colonne = 1;
 [{};=:,]              { nb_colonne++; return yytext[0]; }
 
 \"[^\"]*\"            { 
+                        // Traitement des chaines de caracteres
+                        // printf("DEBUG: Chaine trouvee: %s\n", yytext);
                         yytext[strlen(yytext)-1] = '\0';
                         yylval.str = strdup(yytext+1);
                         nb_colonne += strlen(yytext) + 1;
@@ -37,10 +41,16 @@ int nb_colonne = 1;
 
 [a-z]                 { yylval.c = yytext[0]; nb_colonne++; return TOK_CHAR; }
 
-[a-zA-Z_][a-zA-Z0-9_]+ { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
+[a-zA-Z_][a-zA-Z0-9_]+ { 
+                         // Identifiants (bhal q0, q1, Auto1...)
+                         yylval.str = strdup(yytext); 
+                         nb_colonne += strlen(yytext); 
+                         return TOK_IDENTIFIER; 
+                       }
+
 [A-Z_][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 
-.                     { nb_colonne++; }
+.                     { nb_colonne++; /* Caractere inconnu ? */ }
 
 %%
 

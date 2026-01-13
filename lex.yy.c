@@ -489,7 +489,7 @@ char *yytext;
 #include "def.h"
 #include <string.h>
 
-// Amelioration #1 : Suivi dyal colonnes
+// hna dert amelioration dyal suivi des lignes et colonnes
 int nb_colonne = 1;
 #line 494 "lex.yy.c"
 #define YY_NO_INPUT 1
@@ -776,96 +776,103 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 16 "lexer.l"
-{ nb_colonne = 1; /* Rje3 l colonne 1 */ }
+#line 17 "lexer.l"
+{ nb_colonne = 1; /* rje3 l star jdid */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "lexer.l"
-{ /* Ignorer les commentaires */ }
+#line 19 "lexer.l"
+{ /* Commentaire : on fait rien */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 19 "lexer.l"
+#line 21 "lexer.l"
 { nb_colonne += 9; return TOK_AUTOMATE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 22 "lexer.l"
 { nb_colonne += 8; return TOK_ALPHABET; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 23 "lexer.l"
 { nb_colonne += 5; return TOK_ETATS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 24 "lexer.l"
 { nb_colonne += 7; return TOK_INITIAL; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 25 "lexer.l"
 { nb_colonne += 6; return TOK_FINAUX; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 26 "lexer.l"
 { nb_colonne += 11; return TOK_TRANSITIONS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 27 "lexer.l"
 { nb_colonne += 8; return TOK_VERIFIER; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 27 "lexer.l"
+#line 29 "lexer.l"
 { nb_colonne += 2; return TOK_ARROW; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "lexer.l"
+#line 31 "lexer.l"
 { nb_colonne++; return yytext[0]; }
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 31 "lexer.l"
+#line 33 "lexer.l"
 { 
-                        yytext[strlen(yytext)-1] = '\0';  /* 7yed guillemet li kaysd */
-                        yylval.str = strdup(yytext+1);     /* Tfet guillemet li kay7el */
+                        // Traitement des chaines de caracteres
+                        // printf("DEBUG: Chaine trouvee: %s\n", yytext);
+                        yytext[strlen(yytext)-1] = '\0';
+                        yylval.str = strdup(yytext+1);
                         nb_colonne += strlen(yytext) + 1;
                         return TOK_STRING; 
                       }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "lexer.l"
+#line 42 "lexer.l"
 { yylval.c = yytext[0]; nb_colonne++; return TOK_CHAR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "lexer.l"
-{ yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
+#line 44 "lexer.l"
+{ 
+                         // Identifiants (bhal q0, q1, Auto1...)
+                         yylval.str = strdup(yytext); 
+                         nb_colonne += strlen(yytext); 
+                         return TOK_IDENTIFIER; 
+                       }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "lexer.l"
+#line 51 "lexer.l"
 { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 43 "lexer.l"
-{ nb_colonne++; /* tantjahlo les caracteres lli mam3roufinch */ }
+#line 53 "lexer.l"
+{ nb_colonne++; /* Caractere inconnu ? */ }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 45 "lexer.l"
+#line 55 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 868 "lex.yy.c"
+#line 875 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1833,7 +1840,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 45 "lexer.l"
+#line 55 "lexer.l"
 
 
 int yywrap(void) {

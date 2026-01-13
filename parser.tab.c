@@ -82,7 +82,7 @@ extern int yylineno;
 
 Automate *automate_actuel = NULL;
 
-/* Prototypes dyal fonctions auxiliaires */
+
 Automate* initialiser_automate(char* nom);
 void ajouter_symbole(char symbole);
 void ajouter_etat(char* nom_etat);
@@ -93,12 +93,14 @@ int symbole_existe(char symbole);
 int etat_existe(char* nom_etat);
 int transition_existe(char* src, char sym);
 
-/* Implementation dyal fonctions auxiliaires */
+
 
 Automate* initialiser_automate(char* nom) {
+    // Allocation memoire (dima katkhla9 machakil hna)
     Automate* automate = (Automate*)malloc(sizeof(Automate));
+    
     if (!automate) {
-        fprintf(stderr, "Erreur : Échec d'allocation mémoire\n");
+        fprintf(stderr, "Erreur : plus de memoire !\n");
         exit(1);
     }
     
@@ -112,24 +114,26 @@ Automate* initialiser_automate(char* nom) {
     automate->nb_finaux = 0;
     automate->transitions = NULL;
     
+    // printf("Debug: Automate %s initialise\n", nom);
     return automate;
 }
 
 void ajouter_symbole(char symbole) {
     if (!automate_actuel) return;
     
-    // Verifier doublons
+    // Boucle pour verifier les doublons
     for (int i = 0; i < automate_actuel->nb_symboles; i++) {
         if (automate_actuel->alphabet[i][0] == symbole) {
-            return; // Rrmz deja kayyn
+            return; // Deja kayn
         }
     }
     
-    // katzid rrmz
+    // Nzidou l'espace
     automate_actuel->alphabet = (char**)realloc(
         automate_actuel->alphabet, 
         sizeof(char*) * (automate_actuel->nb_symboles + 1)
     );
+    
     automate_actuel->alphabet[automate_actuel->nb_symboles] = (char*)malloc(2);
     automate_actuel->alphabet[automate_actuel->nb_symboles][0] = symbole;
     automate_actuel->alphabet[automate_actuel->nb_symboles][1] = '\0';
@@ -139,18 +143,20 @@ void ajouter_symbole(char symbole) {
 void ajouter_etat(char* nom_etat) {
     if (!automate_actuel) return;
     
-    // Verifier doublons
+    // printf("Debug: Ajout etat %s\n", nom_etat);
+
     for (int i = 0; i < automate_actuel->nb_etats; i++) {
         if (strcmp(automate_actuel->etats[i], nom_etat) == 0) {
-            return; // L'etat deja kayyn
+            return; // doublon
         }
     }
     
-    // katzid l'etat
+    // Realloc bach nwes3o tableau
     automate_actuel->etats = (char**)realloc(
         automate_actuel->etats,
         sizeof(char*) * (automate_actuel->nb_etats + 1)
     );
+    
     automate_actuel->etats[automate_actuel->nb_etats] = strdup(nom_etat);
     automate_actuel->nb_etats++;
 }
@@ -169,7 +175,7 @@ int symbole_existe(char symbole) {
 int etat_existe(char* nom_etat) {
     if (!automate_actuel) return 0;
     
-    for (int i = 0; i < automate_actuel->nb_etats; i++) {
+    for (int i=0; i < automate_actuel->nb_etats; i++) {
         if (strcmp(automate_actuel->etats[i], nom_etat) == 0) {
             return 1;
         }
@@ -177,14 +183,15 @@ int etat_existe(char* nom_etat) {
     return 0;
 }
 
-//Verifier determinisme
+
 int transition_existe(char* src, char sym) {
     if (!automate_actuel) return 0;
     
     Transition* t = automate_actuel->transitions;
     while (t) {
         if (strcmp(t->source, src) == 0 && t->symbol == sym) {
-            return 1; // Deja kayna transition mn had l'etat b had rrmz
+            // printf("Debug: Conflit trouve pour %s avec %c\n", src, sym);
+            return 1; 
         }
         t = t->next;
     }
@@ -194,7 +201,6 @@ int transition_existe(char* src, char sym) {
 void definir_initial(char* nom_etat) {
     if (!automate_actuel) return;
     
-    // Verification semantique : l'etat khasso ykoun kayyn
     if (!etat_existe(nom_etat)) {
         fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", nom_etat);
         exit(1);
@@ -204,9 +210,8 @@ void definir_initial(char* nom_etat) {
 }
 
 void ajouter_final(char* nom_etat) {
-    if (!automate_actuel) return;
+    if(!automate_actuel) return;
     
-    // Verification semantique : l'etat khasso ykoun kayyn
     if (!etat_existe(nom_etat)) {
         fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", nom_etat);
         exit(1);
@@ -214,16 +219,10 @@ void ajouter_final(char* nom_etat) {
     
     // Verifier doublons
     for (int i = 0; i < automate_actuel->nb_finaux; i++) {
-        if (strcmp(automate_actuel->etats_finaux[i], nom_etat) == 0) {
-            return; // Deja etat final
-        }
+        if (strcmp(automate_actuel->etats_finaux[i], nom_etat) == 0) return;
     }
     
-    // katzid l'etat final
-    automate_actuel->etats_finaux = (char**)realloc(
-        automate_actuel->etats_finaux,
-        sizeof(char*) * (automate_actuel->nb_finaux + 1)
-    );
+    automate_actuel->etats_finaux = (char**)realloc(automate_actuel->etats_finaux, sizeof(char*) * (automate_actuel->nb_finaux + 1));
     automate_actuel->etats_finaux[automate_actuel->nb_finaux] = strdup(nom_etat);
     automate_actuel->nb_finaux++;
 }
@@ -231,55 +230,53 @@ void ajouter_final(char* nom_etat) {
 void ajouter_transition(char* src, char sym, char* dest) {
     if (!automate_actuel) return;
     
-    // Verification semantique : rrmz khasso ykoun f l'alphabet
+    // printf("Debug: Tentative transition %s --%c--> %s\n", src, sym, dest);
+
+    // Checks semantiques
     if (!symbole_existe(sym)) {
-        fprintf(stderr, "Erreur semantique (Ligne %d, Col %d): Had rrmz '%c' ma-kaynch f l'alphabet!\n", 
-                yylineno, nb_colonne, sym);
+        fprintf(stderr, "Erreur semantique (Ligne %d, Col %d): Had rrmz '%c' ma-kaynch f l'alphabet!\n", yylineno, nb_colonne, sym);
         exit(1);
     }
     
-    // Verification semantique : l'etat source khasso ykoun kayyn
     if (!etat_existe(src)) {
-        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", src);
+        fprintf(stderr, "Erreur semantique: Etat source '%s' Inconnu.\n", src);
         exit(1);
     }
     
-    // Verification semantique : l'etat destination khasso ykoun kayyn
     if (!etat_existe(dest)) {
-        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", dest);
+        fprintf(stderr, "Erreur semantique: Etat degstination '%s' Inconnu.\n", dest);
         exit(1);
     }
     
+
     if (transition_existe(src, sym)) {
         fprintf(stderr, "Erreur Non-Deterministe: L'etat '%s' 3ando deja transition b rrmz '%c'! L'automate khasso ykoun Deterministe.\n", src, sym);
         exit(1);
     }
     
-    // kansaweb transition jdida
-    Transition* nouvelle_transition = (Transition*)malloc(sizeof(Transition));
-    nouvelle_transition->source = strdup(src);
-    nouvelle_transition->symbol = sym;
-    nouvelle_transition->destination = strdup(dest);
-    nouvelle_transition->next = NULL;
+    // Allocation nouvelle transition
+    Transition* nouvelle = (Transition*)malloc(sizeof(Transition));
+    nouvelle->source= strdup(src);
+    nouvelle->symbol = sym;
+    nouvelle->destination = strdup(dest);
+    nouvelle->next = NULL;
     
-    // Zedtha l liste chainee
+    // Ajout a la fin de la liste chainee
     if (!automate_actuel->transitions) {
-        automate_actuel->transitions = nouvelle_transition;
+        automate_actuel->transitions = nouvelle;
     } else {
         Transition* temp = automate_actuel->transitions;
         while (temp->next) {
             temp = temp->next;
         }
-        temp->next = nouvelle_transition;
+        temp->next = nouvelle;
     }
 }
 
 
 int est_etat_final(Automate *a, char *etat) {
     for (int i = 0; i < a->nb_finaux; i++) {
-        if (strcmp(a->etats_finaux[i], etat) == 0) {
-            return 1;
-        }
+        if (strcmp(a->etats_finaux[i], etat) == 0) return 1;
     }
     return 0;
 }
@@ -298,7 +295,7 @@ Transition* trouver_transition(Automate *a, char *etat_src, char symbole) {
 
 void executer_automate(Automate *a, char *mot) {
     if (!a || !a->etat_initial) {
-        fprintf(stderr, "Erreur: L'automate machi complet.\n");
+        fprintf(stderr, "Erreur: Automate incomplet.\n");
         return;
     }
     
@@ -306,6 +303,7 @@ void executer_automate(Automate *a, char *mot) {
     printf("\n--- Simulation dyal l'mot '%s' ---\n", mot);
     printf("Bdit mn l'etat: %s\n", etat_courant);
     
+    // Boucle 3la l'mot
     for (int i = 0; mot[i] != '\0'; i++) {
         char symbole = mot[i];
         printf("  Qra rrmz '%c'... ", symbole);
@@ -321,7 +319,7 @@ void executer_automate(Automate *a, char *mot) {
         etat_courant = t->destination;
     }
     
-    // Chof wach wselna l etat final
+    // Enfin ça marche
     if (est_etat_final(a, etat_courant)) {
         printf("\nNadi! L'mot '%s' maqboule (Accepte).\n", mot);
         printf("Weselna l l'etat final: %s\n\n", etat_courant);
@@ -338,29 +336,23 @@ void generer_dot(Automate *a) {
     snprintf(filename, sizeof(filename), "%s.dot", a->nom);
     
     FILE *f = fopen(filename, "w");
-    if (!f) {
-        fprintf(stderr, "Erreur: Ma-qdertnach n7el fichier '%s'.\n", filename);
-        return;
-    }
+    if (!f) return; // Error handling bzerba
     
     fprintf(f, "digraph %s {\n", a->nom);
     fprintf(f, "    rankdir=LR;\n");
     fprintf(f, "    node [shape=circle];\n\n");
     
-    // Etat initial - flech mn berra
     if (a->etat_initial) {
         fprintf(f, "    start [shape=point];\n");
         fprintf(f, "    start -> %s;\n\n", a->etat_initial);
     }
     
-    // Etats finaux - double cercle
     fprintf(f, "    node [shape=doublecircle];\n");
     for (int i = 0; i < a->nb_finaux; i++) {
         fprintf(f, "    %s;\n", a->etats_finaux[i]);
     }
     fprintf(f, "\n    node [shape=circle];\n\n");
     
-    // Transitions
     Transition* t = a->transitions;
     while (t) {
         fprintf(f, "    %s -> %s [label=\"%c\"];\n", t->source, t->destination, t->symbol);
@@ -370,12 +362,11 @@ void generer_dot(Automate *a) {
     fprintf(f, "}\n");
     fclose(f);
     
-    printf("Fichier Graphviz '%s' genere! Dir 'dot -Tpng %s -o %s.png' bach tchouf l'graphe.\n\n", 
-           filename, filename, a->nom);
+    printf("Fichier Graphviz '%s' genere! Dir 'dot -Tpng %s -o %s.png' bach tchouf l'graphe.\n\n", filename, filename, a->nom);
 }
 
 
-#line 379 "parser.tab.c"
+#line 370 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -829,10 +820,10 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   324,   324,   344,   346,   350,   351,   355,   364,   363,
-     375,   379,   380,   384,   385,   386,   387,   388,   392,   396,
-     400,   407,   411,   416,   424,   432,   436,   441,   449,   453,
-     454,   458
+       0,   315,   315,   335,   337,   341,   342,   346,   355,   354,
+     366,   370,   371,   375,   376,   377,   378,   379,   383,   387,
+     391,   398,   402,   407,   415,   423,   427,   432,   440,   444,
+     445,   449
 };
 #endif
 
@@ -1434,7 +1425,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: automate_def commandes_opt  */
-#line 325 "parser.y"
+#line 316 "parser.y"
     {
         printf("Nadi! L'automate '%s' mrigl (valide).\n", automate_actuel->nom);
         printf("Details:\n");
@@ -1443,68 +1434,77 @@ yyreduce:
         
         int nb_transitions = 0;
         Transition* t = automate_actuel->transitions;
-        while (t) {
+        while(t) {
             nb_transitions++;
             t = t->next;
         }
         printf(" - Nombre de transitions: %d\n", nb_transitions);
         
-        // Auto-generer fichier DOT
+        // Generer le fichier DOT a la fin
         generer_dot(automate_actuel);
+    }
+#line 1447 "parser.tab.c"
+    break;
+
+  case 7: /* commande: TOK_VERIFIER TOK_STRING ';'  */
+#line 347 "parser.y"
+    {
+        executer_automate(automate_actuel, (yyvsp[-1].str));
+        free((yyvsp[-1].str)); 
     }
 #line 1456 "parser.tab.c"
     break;
 
-  case 7: /* commande: TOK_VERIFIER TOK_STRING ';'  */
-#line 356 "parser.y"
-    {
-        executer_automate(automate_actuel, (yyvsp[-1].str));
-        free((yyvsp[-1].str));
-    }
-#line 1465 "parser.tab.c"
-    break;
-
   case 8: /* $@1: %empty  */
-#line 364 "parser.y"
+#line 355 "parser.y"
     {
         automate_actuel = initialiser_automate((yyvsp[-1].str));
         printf("Bdit kan-analysi l'automate: %s...\n", (yyvsp[-1].str));
     }
-#line 1474 "parser.tab.c"
+#line 1465 "parser.tab.c"
     break;
 
   case 9: /* automate_def: TOK_AUTOMATE identifier '{' $@1 sections '}'  */
-#line 369 "parser.y"
+#line 360 "parser.y"
     {
         free((yyvsp[-4].str));
     }
-#line 1482 "parser.tab.c"
+#line 1473 "parser.tab.c"
     break;
 
   case 10: /* identifier: TOK_IDENTIFIER  */
-#line 375 "parser.y"
+#line 366 "parser.y"
                    { (yyval.str) = (yyvsp[0].str); }
-#line 1488 "parser.tab.c"
+#line 1479 "parser.tab.c"
     break;
 
   case 19: /* char_list: TOK_CHAR  */
-#line 397 "parser.y"
+#line 388 "parser.y"
     {
         ajouter_symbole((yyvsp[0].c));
     }
-#line 1496 "parser.tab.c"
+#line 1487 "parser.tab.c"
     break;
 
   case 20: /* char_list: char_list ',' TOK_CHAR  */
-#line 401 "parser.y"
+#line 392 "parser.y"
     {
         ajouter_symbole((yyvsp[0].c));
+    }
+#line 1495 "parser.tab.c"
+    break;
+
+  case 22: /* identifier_list: identifier  */
+#line 403 "parser.y"
+    { 
+        ajouter_etat((yyvsp[0].str));
+        free((yyvsp[0].str)); 
     }
 #line 1504 "parser.tab.c"
     break;
 
-  case 22: /* identifier_list: identifier  */
-#line 412 "parser.y"
+  case 23: /* identifier_list: identifier_list ',' identifier  */
+#line 408 "parser.y"
     { 
         ajouter_etat((yyvsp[0].str));
         free((yyvsp[0].str)); 
@@ -1512,26 +1512,26 @@ yyreduce:
 #line 1513 "parser.tab.c"
     break;
 
-  case 23: /* identifier_list: identifier_list ',' identifier  */
-#line 417 "parser.y"
-    { 
-        ajouter_etat((yyvsp[0].str));
-        free((yyvsp[0].str)); 
-    }
-#line 1522 "parser.tab.c"
-    break;
-
   case 24: /* initial_section: TOK_INITIAL '=' identifier ';'  */
-#line 425 "parser.y"
+#line 416 "parser.y"
     {
         definir_initial((yyvsp[-1].str));
         free((yyvsp[-1].str));
     }
-#line 1531 "parser.tab.c"
+#line 1522 "parser.tab.c"
     break;
 
   case 26: /* final_list: identifier  */
-#line 437 "parser.y"
+#line 428 "parser.y"
+    {
+        ajouter_final((yyvsp[0].str));
+        free((yyvsp[0].str)); 
+    }
+#line 1531 "parser.tab.c"
+    break;
+
+  case 27: /* final_list: final_list ',' identifier  */
+#line 433 "parser.y"
     {
         ajouter_final((yyvsp[0].str));
         free((yyvsp[0].str));
@@ -1539,27 +1539,19 @@ yyreduce:
 #line 1540 "parser.tab.c"
     break;
 
-  case 27: /* final_list: final_list ',' identifier  */
-#line 442 "parser.y"
-    {
-        ajouter_final((yyvsp[0].str));
-        free((yyvsp[0].str));
-    }
-#line 1549 "parser.tab.c"
-    break;
-
   case 31: /* transition: identifier ':' TOK_CHAR TOK_ARROW identifier ';'  */
-#line 459 "parser.y"
+#line 450 "parser.y"
     {
         ajouter_transition((yyvsp[-5].str), (yyvsp[-3].c), (yyvsp[-1].str));
         free((yyvsp[-5].str));
         free((yyvsp[-1].str));
+        // printf("Debug: transition ajoutee\n");
     }
-#line 1559 "parser.tab.c"
+#line 1551 "parser.tab.c"
     break;
 
 
-#line 1563 "parser.tab.c"
+#line 1555 "parser.tab.c"
 
       default: break;
     }
@@ -1752,7 +1744,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 466 "parser.y"
+#line 458 "parser.y"
 
 
 void yyerror(const char *s) {
@@ -1771,10 +1763,13 @@ int main(int argc, char **argv) {
     }
     
     printf("--- Mulakhass ---\n");
+    
+   
     if (yyparse() == 0) {
         printf("\n");
         printf("Smya: %s\n", automate_actuel->nom);
         printf("Etat Initial: %s\n", automate_actuel->etat_initial);
+       
         printf("Etats Finaux: ");
         for (int i = 0; i < automate_actuel->nb_finaux; i++) {
             printf("%s", automate_actuel->etats_finaux[i]);

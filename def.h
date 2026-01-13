@@ -9,33 +9,37 @@
 // Structure dyal transition wahda
 // Matalan: "q0 : a -> q1"
 typedef struct Transition {
-    char *source;              // L'etat li jayy mnha (ex: "q0")
-    char symbol;               // Rrmz dyal transition (ex: 'a')
-    char *destination;         // L'etat li ghadi liha (ex: "q1")
-    struct Transition *next;   // Pointer l transition li jaya (Liste chainee)
+    char *source;              // Mn fin jayin
+    char symbol;      // Rrmz
+    char *destination;         // Fin ghadin
+    struct Transition *next;   // Liste chainee (attention pointeurs !!)
 } Transition;
 
-// Structure dyal l'automate kamla
+// Structure dyal l'automate
 typedef struct Automate {
-    char *nom;                 // Smya dyal l'automate
-    char **alphabet;           // Lista dyal rrmoz msmo7in
-    int nb_symboles;           // 3dad dyal rrmoz f l'alphabet
-    char **etats;              // Lista dyal etats li declarinhom
-    int nb_etats;              // 3dad dyal etats
-    char *etat_initial;        // L'etat li kabda biha
-    char **etats_finaux;       // Lista dyal etats finaux
-    int nb_finaux;             // 3dad dyal etats finaux
-    Transition *transitions;   // Rras dyal liste chainee dyal transitions
+    char *nom; 
+    char **alphabet;           // Tableau dynamique
+    int nb_symboles;
+    
+    char **etats;
+    int nb_etats;              // ch7al mn etat 3ndna
+    
+    char *etat_initial;
+    
+    char **etats_finaux;
+    int nb_finaux;
+    
+    Transition *transitions;   // Rras dyal liste
 } Automate;
 
-// Pointeur global bach Parser ykoun 3ndo access l l'automate 
+// Pointeur global (bach ykoun accessible f parser.y)
 extern Automate *automate_actuel;
 
-// Prototypes dyal fonctions avancees
+/* Prototypes */
 void executer_automate(Automate *a, char *mot);
 void generer_dot(Automate *a);
-int est_etat_final(Automate *a, char *etat);
+int est_etat_final(Automate  *a, char *etat);
 Transition* trouver_transition(Automate *a, char *etat_src, char symbole);
 
-#endif
 
+#endif
