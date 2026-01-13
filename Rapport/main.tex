@@ -1,0 +1,96 @@
+﻿\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+
+\definecolor{EnsaBlue}{RGB}{34, 46, 115}
+\definecolor{EnsaGreen}{RGB}{0, 133, 63}
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codeblue}{RGB}{0,0,255}
+\definecolor{codepurple}{RGB}{128,0,128}
+
+\geometry{
+    a4paper,
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=2.5cm
+}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{EnsaBlue}}
+{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{EnsaBlue}}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color{EnsaGreen}}
+{\thesubsection}{1em}{}
+
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{codeblue}\bfseries,
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codepurple},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    backgroundcolor=\color{codebg},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    rulecolor=\color{EnsaBlue},
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    xleftmargin=15pt,
+    xrightmargin=5pt
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=EnsaBlue,
+    urlcolor=EnsaGreen,
+    citecolor=EnsaBlue,
+    pdftitle={Compilateur AFD - ENSAH},
+    pdfauthor={Yazid TAHIRI ALAOUI}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\include{titlepage}
+
+\tableofcontents
+\newpage
+
+\include{chapters/1_introduction}
+\include{chapters/2_analyse_lexicale}
+\include{chapters/3_analyse_syntaxique}
+\include{chapters/4_structures_donnees}
+\include{chapters/5_ameliorations}
+\include{chapters/6_conclusion}
+
+\end{document}

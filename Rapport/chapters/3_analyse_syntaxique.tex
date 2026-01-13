@@ -1,0 +1,138 @@
+\chapter{Analyse Syntaxique (TP3)}
+
+\section{Introduction}
+
+L'analyse syntaxique vérifie que la séquence de tokens produite par le lexer respecte la grammaire du langage. Notre analyseur syntaxique est implémenté dans \texttt{parser.y} avec \textbf{Bison}.
+
+\section{Grammaire du Langage AFD}
+
+La grammaire définit la structure hiérarchique des descriptions d'automates :
+
+\subsection{Règle Principale}
+
+\begin{lstlisting}[caption=Grammaire - Déclaration d'automate]
+program:
+    automate_def commandes_opt
+    ;
+
+automate_def:
+    TOK_AUTOMATE identifier '{' sections '}' 
+    ;
+
+sections:
+    section
+    | sections section
+    ;
+
+section:
+      alphabet_section
+    | etats_section
+    | initial_section
+    | finaux_section
+    | transitions_section
+    ;
+\end{lstlisting}
+
+\subsection{Sections de l'Automate}
+
+Chaque automate contient cinq sections obligatoires :
+
+\begin{enumerate}
+    \item \textbf{Alphabet} : Définition des symboles
+    \begin{lstlisting}
+alphabet_section:
+    TOK_ALPHABET '=' '{' char_list '}' ';'
+    ;
+    \end{lstlisting}
+    
+    \item \textbf{États} : Liste des états
+    \begin{lstlisting}
+etats_section:
+    TOK_ETATS '=' '{' identifier_list '}' ';'
+    ;
+    \end{lstlisting}
+    
+    \item \textbf{État Initial} : Point de départ
+    \begin{lstlisting}
+initial_section:
+    TOK_INITIAL '=' identifier ';'
+    ;
+    \end{lstlisting}
+    
+    \item \textbf{États Finaux} : États acceptants
+    \begin{lstlisting}
+finaux_section:
+    TOK_FINAUX '=' '{' identifier_list '}' ';'
+    ;
+    \end{lstlisting}
+    
+    \item \textbf{Transitions} : Règles de déplacement
+    \begin{lstlisting}
+transition:
+    identifier ':' TOK_CHAR TOK_ARROW identifier ';'
+    ;
+    \end{lstlisting}
+\end{enumerate}
+
+\section{Actions Sémantiques}
+
+Bison permet d'associer des \textit{actions sémantiques} aux règles grammaticales. Ces actions construisent la structure de données représentant l'automate :
+
+\begin{lstlisting}[caption=Actions sémantiques - Exemple]
+char_list:
+    TOK_CHAR {
+        ajouter_symbole($1);
+    }
+    | char_list ',' TOK_CHAR {
+        ajouter_symbole($3);
+    }
+    ;
+
+transition:
+    identifier ':' TOK_CHAR TOK_ARROW identifier ';' {
+        ajouter_transition($1, $3, $5);
+        free($1);
+        free($5);
+    }
+    ;
+\end{lstlisting}
+
+\section{Construction de la Structure}
+
+Au fur et à mesure du parsing, Bison appelle les fonctions C qui peuplent la structure \texttt{Automate} globale :
+
+\begin{itemize}
+    \item \texttt{initialiser\_automate()} : Créé la structure vide
+    \item \texttt{ajouter\_symbole()} : Ajoute un symbole à l'alphabet
+    \item \texttt{ajouter\_etat()} : Enregistre un nouvel état
+    \item \texttt{definir\_initial()} : Définit l'état de départ
+    \item \texttt{ajouter\_final()} : Marque un état comme acceptant
+    \item \texttt{ajouter\_transition()} : Créé une transition
+\end{itemize}
+
+\section{Gestion des Erreurs}
+
+La fonction \texttt{yyerror()} personnalisée affiche des messages d'erreur précis :
+
+\begin{lstlisting}[caption=Gestion des erreurs syntaxiques]
+void yyerror(const char *s) {
+    fprintf(stderr, 
+        "Erreur Syntaxique f la ligne %d, colonne %d: "
+        "Kayn chi mochkil hna!\n", 
+        yylineno, nb_colonne);
+}
+\end{lstlisting}
+
+Cette approche donne des messages contextuels en combinant ligne et colonne, tout en conservant le style Darija pour l'utilisateur final.
+
+\section{Communication Lexer-Parser}
+
+Le lexer et le parser communiquent via :
+
+\begin{itemize}
+    \item \textbf{Tokens} : Codes entiers retournés par le lexer (ex: \texttt{TOK\_AUTOMATE})
+    \item \textbf{yylval} : Union permettant de transmettre les valeurs (chaînes, caractères)
+    \item \textbf{parser.tab.h} : Fichier généré par Bison contenant les définitions de tokens
+\end{itemize}
+
+Cette architecture modulaire est conforme aux standards professionnels de construction de compilateurs.

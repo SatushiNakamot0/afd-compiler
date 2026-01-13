@@ -1,0 +1,186 @@
+\chapter{Améliorations et Fonctionnalités Élites}
+
+\section{Introduction}
+
+Au-delà des exigences de base des TP2 et TP3, trois fonctionnalités avancées ont été implémentées pour faire de ce projet un compilateur complet et robuste.
+
+\section{Amélioration 1 : Vérification du Déterminisme}
+
+\subsection{Problème}
+
+Un \textbf{AFD} (Automate Fini Déterministe) ne peut avoir qu'une seule transition sortante par symbole depuis un état donné. Il est crucial de détecter les violations de cette règle.
+
+\subsection{Solution Implémentée}
+
+Avant d'ajouter une transition, le compilateur vérifie qu'aucune transition avec le même état source et le même symbole n'existe déjà :
+
+\begin{lstlisting}[caption=Vérification du déterminisme]
+int transition_existe(char* src, char sym) {
+    Transition* t = automate_actuel->transitions;
+    while (t) {
+        if (strcmp(t->source, src) == 0 && 
+            t->symbol == sym) {
+            return 1; // Conflit trouve
+        }
+        t = t->next;
+    }
+    return 0;
+}
+
+void ajouter_transition(char* src, char sym, char* dest) {
+    // ... validations semantiques ...
+    
+    if (transition_existe(src, sym)) {
+        fprintf(stderr, 
+            "Erreur Non-Deterministe: L'etat '%s' "
+            "3ando deja transition b rrmz '%c'! "
+            "L'automate khasso ykoun Deterministe a btal.\n",
+            src, sym);
+        exit(1);
+    }
+    
+    // Ajouter la transition ...
+}
+\end{lstlisting}
+
+\subsection{Impact}
+
+Cette vérification garantit mathématiquement que tout automate compilé est bien \textbf{déterministe}, conformément à la définition formelle des AFDs.
+
+\section{Amélioration 2 : Simulateur d'Exécution}
+
+\subsection{Objectif}
+
+Permettre à l'utilisateur de \textit{tester} son automate en vérifiant si un mot donné est accepté ou rejeté.
+
+\subsection{Implémentation}
+
+Le simulateur parcourt le mot caractère par caractère et suit les transitions :
+
+\begin{lstlisting}[caption=Fonction de simulation]
+void executer_automate(Automate *a, char *mot) {
+    char *etat_courant = a->etat_initial;
+    printf("\n--- Simulation dyal l'mot '%s' ---\n", mot);
+    printf("Bdit mn l'etat: %s\n", etat_courant);
+    
+    for (int i = 0; mot[i] != '\0'; i++) {
+        char symbole = mot[i];
+        printf("  Qra rrmz '%c'... ", symbole);
+        
+        Transition* t = trouver_transition(a, 
+                                           etat_courant, 
+                                           symbole);
+        if (!t) {
+            printf("\nDommage... L'mot '%s' merfoud.\n", 
+                   mot);
+            return;
+        }
+        
+        printf("-> %s\n", t->destination);
+        etat_courant = t->destination;
+    }
+    
+    if (est_etat_final(a, etat_courant)) {
+        printf("\nNadi! L'mot '%s' maqboule.\n", mot);
+    } else {
+        printf("\nDommage... L'mot '%s' merfoud.\n", 
+               mot);
+    }
+}
+\end{lstlisting}
+
+\subsection{Syntaxe Utilisateur}
+
+L'utilisateur peut ajouter des commandes \texttt{verifier} dans son fichier :
+
+\begin{lstlisting}[language=bash, caption=Exemple d'utilisation]
+automate MonAFD {
+    // ... definition ...
+}
+
+verifier "aba";
+verifier "aaa";
+\end{lstlisting}
+
+\subsection{Exemple de Sortie}
+
+\begin{verbatim}
+--- Simulation dyal l'mot 'aba' ---
+Bdit mn l'etat: q0
+  Qra rrmz 'a'... -> q1
+  Qra rrmz 'b'... -> q2
+  Qra rrmz 'a'... 
+Dommage... L'mot 'aba' merfoud (Rejete).
+Sebab: Ma-kaynach transition mn 'q2' b rrmz 'a'.
+\end{verbatim}
+
+\section{Amélioration 3 : Export Graphviz}
+
+\subsection{Objectif}
+
+Générer automatiquement une visualisation graphique de l'automate construit.
+
+\subsection{Format DOT}
+
+Le compilateur génère un fichier au format \textbf{Graphviz DOT} :
+
+\begin{lstlisting}[caption=Génération de fichier DOT]
+void generer_dot(Automate *a) {
+    char filename[256];
+    snprintf(filename, sizeof(filename), 
+             "%s.dot", a->nom);
+    
+    FILE *f = fopen(filename, "w");
+    
+    fprintf(f, "digraph %s {\n", a->nom);
+    fprintf(f, "    rankdir=LR;\n");
+    
+    // Etat initial avec fleche d'entree
+    fprintf(f, "    start [shape=point];\n");
+    fprintf(f, "    start -> %s;\n", a->etat_initial);
+    
+    // Etats finaux en double cercle
+    fprintf(f, "    node [shape=doublecircle];\n");
+    for (int i = 0; i < a->nb_finaux; i++) {
+        fprintf(f, "    %s;\n", a->etats_finaux[i]);
+    }
+    
+    // Transitions
+    Transition* t = a->transitions;
+    while (t) {
+        fprintf(f, "    %s -> %s [label=\"%c\"];\n",
+                t->source, t->destination, t->symbol);
+        t = t->next;
+    }
+    
+    fprintf(f, "}\n");
+    fclose(f);
+}
+\end{lstlisting}
+
+\subsection{Utilisation}
+
+Après compilation, l'utilisateur peut générer une image PNG :
+
+\begin{verbatim}
+$ dot -Tpng MonAutomate.dot -o MonAutomate.png
+\end{verbatim}
+
+\section{Tableau Récapitulatif}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{9cm}|}
+\hline
+\textbf{Feature} & \textbf{Impact} \\
+\hline
+Déterminisme & Garantie mathématique de validité AFD \\
+\hline
+Simulateur & Outil de test et validation pratique permettant l'exécution réelle de mots \\
+\hline
+Graphviz & Visualisation pédagogique et professionnelle au format DOT \\
+\hline
+\end{tabular}
+\caption{Fonctionnalités élites implémentées}
+\end{table}
+

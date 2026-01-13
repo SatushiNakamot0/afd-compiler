@@ -1,0 +1,113 @@
+\chapter{Structures de Données}
+
+\section{Introduction}
+
+Le choix des structures de données est crucial pour un compilateur efficace. Ce chapitre présente la représentation en mémoire d'un AFD, définie dans le fichier \texttt{def.h}.
+
+\section{Structure Transition}
+
+Une transition représente un déplacement entre deux états pour un symbole donné.
+
+\begin{lstlisting}[caption=Structure Transition]
+typedef struct Transition {
+    char *source;              // Etat source
+    char symbol;               // Symbole de transition
+    char *destination;         // Etat destination
+    struct Transition *next;   // Liste chainee
+} Transition;
+\end{lstlisting}
+
+\subsection{Justification : Liste Chaînée}
+
+Les transitions sont organisées en \textbf{liste chaînée} pour plusieurs raisons :
+
+\begin{itemize}
+    \item \textbf{Flexibilité} : Nombre de transitions inconnu à l'avance
+    \item \textbf{Simplicité} : Ajout dynamique en $O(1)$ en fin de liste
+    \item \textbf{Mémoire} : Pas de sur-allocation comme avec un tableau
+\end{itemize}
+
+\section{Structure Automate}
+
+La structure principale représente un AFD complet :
+
+\begin{lstlisting}[caption=Structure Automate]
+typedef struct Automate {
+    char *nom;                 // Nom de l'automate
+    char **alphabet;           // Tableau de symboles
+    int nb_symboles;           // Taille de l'alphabet
+    char **etats;              // Tableau d'etats
+    int nb_etats;              // Nombre d'etats
+    char *etat_initial;        // Etat de depart
+    char **etats_finaux;       // Tableau d'etats finaux
+    int nb_finaux;             // Nombre d'etats finaux
+    Transition *transitions;   // Liste des transitions
+} Automate;
+\end{lstlisting}
+
+\subsection{Champs de la Structure}
+
+\begin{itemize}
+    \item \texttt{nom} : Identifiant unique de l'automate
+    \item \texttt{alphabet} : Tableau dynamique de chaînes (symboles autorisés)
+    \item \texttt{nb\_symboles} : Compteur pour parcourir l'alphabet
+    \item \texttt{etats} : Tableau dynamique des noms d'états
+    \item \texttt{nb\_etats} : Nombre total d'états déclarés
+    \item \texttt{etat\_initial} : Pointeur vers le nom de l'état de départ
+    \item \texttt{etats\_finaux} : Tableau des états acceptants
+    \item \texttt{nb\_finaux} : Nombre d'états finaux
+    \item \texttt{transitions} : Tête de la liste chaînée de transitions
+\end{itemize}
+
+\section{Utilisation comme Table des Symboles}
+
+La structure \texttt{Automate} joue le rôle de \textbf{table des symboles} :
+
+\begin{itemize}
+    \item \textbf{Déclaration} : Les états et symboles sont enregistrés au moment de leur déclaration
+    \item \textbf{Vérification} : Avant d'ajouter une transition, le compilateur vérifie l'existence des états et symboles
+    \item \textbf{Validation sémantique} : Détection immédiate des erreurs (symbole non déclaré, état inconnu, etc.)
+\end{itemize}
+
+\section{Allocation Dynamique}
+
+Toutes les données sont allouées dynamiquement avec \texttt{malloc()} et \texttt{realloc()} :
+
+\begin{lstlisting}[caption=Exemple - Ajout d'un état]
+void ajouter_etat(char* nom_etat) {
+    if (!automate_actuel) return;
+    
+    // Reallouer le tableau d'etats
+    automate_actuel->etats = (char**)realloc(
+        automate_actuel->etats,
+        sizeof(char*) * (automate_actuel->nb_etats + 1)
+    );
+    
+    // Copier le nom de l'etat
+    automate_actuel->etats[automate_actuel->nb_etats] = 
+        strdup(nom_etat);
+    
+    automate_actuel->nb_etats++;
+}
+\end{lstlisting}
+
+Cette approche permet de gérer des automates de taille arbitraire sans limite fixe.
+
+\section{Variable Globale}
+
+Un pointeur global \texttt{automate\_actuel} est utilisé pour accéder à l'automate en cours de construction depuis le parser :
+
+\begin{lstlisting}
+extern Automate *automate_actuel;
+\end{lstlisting}
+
+Ce design pattern simplifie les actions sémantiques de Bison, qui peuvent directement modifier la structure globale.
+
+\section{Avantages de cette Architecture}
+
+\begin{enumerate}
+    \item \textbf{Simplicité} : Structures claires et intuitives
+    \item \textbf{Efficacité} : Allocation dynamique sans gaspillage
+    \item \textbf{Maintenabilité} : Facile à étendre avec de nouveaux champs
+    \item \textbf{Validation} : Table des symboles intégrée pour vérifications sémantiques
+\end{enumerate}

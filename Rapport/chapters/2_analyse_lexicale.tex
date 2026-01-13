@@ -1,0 +1,102 @@
+\chapter{Analyse Lexicale (TP2)}
+
+\section{Introduction}
+
+L'analyse lexicale est la première phase de la compilation. Elle consiste à transformer une séquence de caractères en une séquence de \textit{tokens} (unités lexicales) compréhensibles par l'analyseur syntaxique.
+
+Notre analyseur lexical est implémenté dans le fichier \texttt{lexer.l} en utilisant \textbf{Flex}.
+
+\section{Tokens Reconnus}
+
+Le lexer identifie les catégories de tokens suivantes :
+
+\subsection{Mots-clés}
+
+Le langage AFD définit plusieurs mots-clés réservés :
+
+\begin{itemize}
+    \item \texttt{automate} : Déclare un nouvel automate
+    \item \texttt{alphabet} : Définit l'ensemble des symboles acceptés
+    \item \texttt{etats} : Liste les états de l'automate
+    \item \texttt{initial} : Spécifie l'état de départ
+    \item \texttt{finaux} : Définit les états acceptants
+    \item \texttt{transitions} : Décrit les transitions entre états
+    \item \texttt{verifier} : Commande de simulation d'un mot
+\end{itemize}
+
+\subsection{Délimiteurs et Opérateurs}
+
+\begin{itemize}
+    \item \texttt{\{}, \texttt{\}} : Délimitent les blocs
+    \item \texttt{;} : Termine les instructions
+    \item \texttt{=} : Affectation
+    \item \texttt{:} : Sépare l'état source du symbole
+    \item \texttt{,} : Sépare les éléments de liste
+    \item \texttt{->} : Opérateur de transition
+\end{itemize}
+
+\subsection{Identifiants et Symboles}
+
+\begin{itemize}
+    \item \textbf{Identifiants} : Noms d'états et d'automates (regex: \texttt{[a-zA-Z\_][a-zA-Z0-9\_]+})
+    \item \textbf{Caractères} : Symboles de l'alphabet (regex: \texttt{[a-z]})
+    \item \textbf{Chaînes} : Mots à vérifier (regex: \texttt{"[^\textbackslash"]*"})
+\end{itemize}
+
+\section{Implémentation avec Flex}
+
+Voici un extrait du fichier \texttt{lexer.l} :
+
+\begin{lstlisting}[caption=Extrait de lexer.l - Reconnaissance des tokens]
+%%
+
+"automate"  { nb_colonne += 9; return TOK_AUTOMATE; }
+"alphabet"  { nb_colonne += 8; return TOK_ALPHABET; }
+"etats"     { nb_colonne += 5; return TOK_ETATS; }
+
+"->"   { nb_colonne += 2; return TOK_ARROW; }
+
+[a-zA-Z_][a-zA-Z0-9_]+ { 
+    yylval.str = strdup(yytext); 
+    nb_colonne += strlen(yytext);
+    return TOK_IDENTIFIER; 
+}
+
+[a-z] { 
+    yylval.c = yytext[0]; 
+    nb_colonne++;
+    return TOK_CHAR; 
+}
+\end{lstlisting}
+
+\section{Amélioration : Suivi des Colonnes}
+
+Une amélioration significative a été ajoutée : le \textbf{tracking des colonnes}. Un compteur global \texttt{nb\_colonne} est incrémenté à chaque token lu, permettant des messages d'erreur précis :
+
+\begin{lstlisting}[caption=Gestion des colonnes]
+int nb_colonne = 1;
+
+[ \t]+ { nb_colonne += strlen(yytext); }
+\n     { nb_colonne = 1; }
+\end{lstlisting}
+
+Cela permet d'afficher des erreurs du type :
+\begin{center}
+    \textit{"Erreur syntaxique à la ligne 5, colonne 12"}
+\end{center}
+
+\section{Choix de Style : Français / Darija}
+
+Un choix délibéré a été fait pour donner une identité unique au projet :
+
+\begin{itemize}
+    \item \textbf{Code interne} : Variables et fonctions en français académique (\texttt{ajouter\_etat}, \texttt{nb\_symboles})
+    \item \textbf{Messages utilisateur} : Output en dialecte marocain Darija (Arabizi) pour une touche personnelle authentique
+\end{itemize}
+
+\textit{Exemple de message :}
+\begin{center}
+    \texttt{"Bdit kan-analysi l'automate: MonAutomate1..."}
+\end{center}
+
+Cette approche reflète l'identité d'un étudiant marocain francophone tout en maintenant un code professionnel.
