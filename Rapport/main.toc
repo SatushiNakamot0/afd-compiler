@@ -12,7 +12,6 @@
 \contentsline {subsection}{\numberline {2.2.3}Identifiants et Symboles}{5}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Implémentation avec Flex}{6}{section.2.3}%
 \contentsline {section}{\numberline {2.4}Amélioration : Suivi des Colonnes}{6}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Choix de Style : Français / Darija}{6}{section.2.5}%
 \contentsline {chapter}{\numberline {3}Analyse Syntaxique (TP3)}{8}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Introduction}{8}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Grammaire du Langage AFD}{8}{section.3.2}%
@@ -43,18 +42,18 @@
 \contentsline {subsection}{\numberline {5.3.2}Implémentation}{15}{subsection.5.3.2}%
 \contentsline {subsection}{\numberline {5.3.3}Syntaxe Utilisateur}{16}{subsection.5.3.3}%
 \contentsline {subsection}{\numberline {5.3.4}Exemple de Sortie}{16}{subsection.5.3.4}%
-\contentsline {section}{\numberline {5.4}Amélioration 3 : Export Graphviz}{16}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Objectif}{16}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Format DOT}{16}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Utilisation}{17}{subsection.5.4.3}%
-\contentsline {section}{\numberline {5.5}Tableau Récapitulatif}{17}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Conclusion}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Bilan du Projet}{18}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Objectifs Atteints}{18}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Compétences Développées}{18}{subsection.6.1.2}%
-\contentsline {section}{\numberline {6.2}Points Forts du Projet}{19}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Robustesse}{19}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Fonctionnalités Complètes}{19}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Identité Unique}{19}{subsection.6.2.3}%
-\contentsline {section}{\numberline {6.3}Perspectives d'Amélioration}{19}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Conclusion Générale}{19}{section.6.4}%
+\contentsline {section}{\numberline {5.4}Amélioration 3 : Export Graphviz}{17}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Objectif}{17}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Format DOT}{17}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Utilisation}{18}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}Tableau Récapitulatif}{18}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Conclusion}{20}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Bilan du Projet}{20}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Objectifs Atteints}{20}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Compétences Développées}{21}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}Points Forts du Projet}{21}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Robustesse}{21}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Fonctionnalités Complètes}{21}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Identité Unique}{21}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}Perspectives d'Amélioration}{22}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Conclusion Générale}{22}{section.6.4}%

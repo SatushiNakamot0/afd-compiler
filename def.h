@@ -28,7 +28,7 @@ typedef struct Automate {
     Transition *transitions;   // Rras dyal liste chainee dyal transitions
 } Automate;
 
-// Pointeur global bach Parser ykoun 3ndo access l l'automate li kanbenou
+// Pointeur global bach Parser ykoun 3ndo access l l'automate 
 extern Automate *automate_actuel;
 
 // Prototypes dyal fonctions avancees
@@ -38,3 +38,4 @@ int est_etat_final(Automate *a, char *etat);
 Transition* trouver_transition(Automate *a, char *etat_src, char symbole);
 
 #endif
+

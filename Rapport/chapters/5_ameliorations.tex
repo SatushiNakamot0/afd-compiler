@@ -47,6 +47,14 @@ void ajouter_transition(char* src, char sym, char* dest) {
 
 Cette vérification garantit mathématiquement que tout automate compilé est bien \textbf{déterministe}, conformément à la définition formelle des AFDs.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth, height=0.4\textheight, keepaspectratio]{images/erreur_determinisme.png}
+    \caption{Validation sémantique : Détection et rejet d'un automate non-déterministe.}
+    \label{fig:determinisme}
+\end{figure}
+
+\FloatBarrier
 \section{Amélioration 2 : Simulateur d'Exécution}
 
 \subsection{Objectif}
@@ -114,6 +122,14 @@ Dommage... L'mot 'aba' merfoud (Rejete).
 Sebab: Ma-kaynach transition mn 'q2' b rrmz 'a'.
 \end{verbatim}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth, height=0.4\textheight, keepaspectratio]{images/simulation_execution.png}
+    \caption{Trace d'exécution du simulateur : Acceptation ('Nadi') et Rejet ('Dommage') avec messages en Darija.}
+    \label{fig:simulation}
+\end{figure}
+
+\FloatBarrier
 \section{Amélioration 3 : Export Graphviz}
 
 \subsection{Objectif}
@@ -166,6 +182,14 @@ Après compilation, l'utilisateur peut générer une image PNG :
 $ dot -Tpng MonAutomate.dot -o MonAutomate.png
 \end{verbatim}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth, keepaspectratio]{images/simulation_execution_visualisation_Graphviz.png}
+    \caption{Visualisation graphique de l'automate générée automatiquement par le compilateur.}
+    \label{fig:graphviz}
+\end{figure}
+
+\FloatBarrier
 \section{Tableau Récapitulatif}
 
 \begin{table}[h]

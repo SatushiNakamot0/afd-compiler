@@ -55,7 +55,7 @@ void ajouter_symbole(char symbole) {
         }
     }
     
-    // Zid rrmz
+    // katzid rrmz
     automate_actuel->alphabet = (char**)realloc(
         automate_actuel->alphabet, 
         sizeof(char*) * (automate_actuel->nb_symboles + 1)
@@ -76,7 +76,7 @@ void ajouter_etat(char* nom_etat) {
         }
     }
     
-    // Zid l'etat
+    // katzid l'etat
     automate_actuel->etats = (char**)realloc(
         automate_actuel->etats,
         sizeof(char*) * (automate_actuel->nb_etats + 1)
@@ -107,7 +107,7 @@ int etat_existe(char* nom_etat) {
     return 0;
 }
 
-// FEATURE #1: Verifier determinisme
+//Verifier determinisme
 int transition_existe(char* src, char sym) {
     if (!automate_actuel) return 0;
     
@@ -149,7 +149,7 @@ void ajouter_final(char* nom_etat) {
         }
     }
     
-    // Zid l'etat final
+    // katzid l'etat final
     automate_actuel->etats_finaux = (char**)realloc(
         automate_actuel->etats_finaux,
         sizeof(char*) * (automate_actuel->nb_finaux + 1)
@@ -180,20 +180,19 @@ void ajouter_transition(char* src, char sym, char* dest) {
         exit(1);
     }
     
-    // FEATURE #1: Verifier determinisme - ma-ykounech jouj transitions mn nfs l'etat b nfs rrmz
     if (transition_existe(src, sym)) {
-        fprintf(stderr, "Erreur Non-Deterministe: L'etat '%s' 3ando deja transition b rrmz '%c'! L'automate khasso ykoun Deterministe a btal.\n", src, sym);
+        fprintf(stderr, "Erreur Non-Deterministe: L'etat '%s' 3ando deja transition b rrmz '%c'! L'automate khasso ykoun Deterministe.\n", src, sym);
         exit(1);
     }
     
-    // Khlq transition jdida
+    // kansaweb transition jdida
     Transition* nouvelle_transition = (Transition*)malloc(sizeof(Transition));
     nouvelle_transition->source = strdup(src);
     nouvelle_transition->symbol = sym;
     nouvelle_transition->destination = strdup(dest);
     nouvelle_transition->next = NULL;
     
-    // Zidha l liste chainee
+    // Zedtha l liste chainee
     if (!automate_actuel->transitions) {
         automate_actuel->transitions = nouvelle_transition;
     } else {
@@ -205,7 +204,7 @@ void ajouter_transition(char* src, char sym, char* dest) {
     }
 }
 
-// FEATURE #2: Simulateur - Helper functions
+
 int est_etat_final(Automate *a, char *etat) {
     for (int i = 0; i < a->nb_finaux; i++) {
         if (strcmp(a->etats_finaux[i], etat) == 0) {
@@ -226,7 +225,7 @@ Transition* trouver_transition(Automate *a, char *etat_src, char symbole) {
     return NULL;
 }
 
-// FEATURE #2: Simulateur - Execution
+
 void executer_automate(Automate *a, char *mot) {
     if (!a || !a->etat_initial) {
         fprintf(stderr, "Erreur: L'automate machi complet.\n");
@@ -262,7 +261,6 @@ void executer_automate(Automate *a, char *mot) {
     }
 }
 
-// FEATURE #3: Graphviz Export
 void generer_dot(Automate *a) {
     if (!a) return;
     

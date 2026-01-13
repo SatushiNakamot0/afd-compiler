@@ -8,7 +8,6 @@ automate TestSimulation {
         q1:b->q2;
     };
 }
-
 verifier "ab";
 verifier "aa";
 verifier "aba";

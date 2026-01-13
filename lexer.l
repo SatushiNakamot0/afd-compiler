@@ -3,15 +3,18 @@
 #include "def.h"
 #include <string.h>
 
-// Amelioration #1 : Suivi dyal colonnes
+// hna dert amelioration lewla dyal suivi des lignes 
 int nb_colonne = 1;
 %}
 
+%option noinput
+%option nounput
+
 %%
 
-[ \t]+                { nb_colonne += strlen(yytext); /* Ignorer les espaces */ }
-\n                    { nb_colonne = 1; /* Rje3 l colonne 1 */ }
-#.*                   { /* Ignorer les commentaires */ }
+[ \t]+                { nb_colonne += strlen(yytext); }
+\n                    { nb_colonne = 1; }
+#.*                   { }
 
 "automate"            { nb_colonne += 9; return TOK_AUTOMATE; }
 "alphabet"            { nb_colonne += 8; return TOK_ALPHABET; }
@@ -26,8 +29,8 @@ int nb_colonne = 1;
 [{};=:,]              { nb_colonne++; return yytext[0]; }
 
 \"[^\"]*\"            { 
-                        yytext[strlen(yytext)-1] = '\0';  /* 7yed guillemet li kaysd */
-                        yylval.str = strdup(yytext+1);     /* Tfet guillemet li kay7el */
+                        yytext[strlen(yytext)-1] = '\0';
+                        yylval.str = strdup(yytext+1);
                         nb_colonne += strlen(yytext) + 1;
                         return TOK_STRING; 
                       }
@@ -37,7 +40,7 @@ int nb_colonne = 1;
 [a-zA-Z_][a-zA-Z0-9_]+ { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 [A-Z_][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 
-.                     { nb_colonne++; /* Ignorer caracteres inconnus */ }
+.                     { nb_colonne++; }
 
 %%
 
