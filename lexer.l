@@ -2,38 +2,42 @@
 #include "parser.tab.h"
 #include "def.h"
 #include <string.h>
+
+// Amelioration #1 : Suivi dyal colonnes
+int nb_colonne = 1;
 %}
 
 %%
 
-[ \t\n]+              { /* Ignore whitespace */ }
-#.*                   { /* Ignore comments */ }
+[ \t]+                { nb_colonne += strlen(yytext); /* Ignorer les espaces */ }
+\n                    { nb_colonne = 1; /* Rje3 l colonne 1 */ }
+#.*                   { /* Ignorer les commentaires */ }
 
-"automate"            { return TOK_AUTOMATE; }
-"alphabet"            { return TOK_ALPHABET; }
-"etats"               { return TOK_ETATS; }
-"initial"             { return TOK_INITIAL; }
-"finaux"              { return TOK_FINAUX; }
-"transitions"         { return TOK_TRANSITIONS; }
-"verifier"            { return TOK_VERIFIER; }
+"automate"            { nb_colonne += 9; return TOK_AUTOMATE; }
+"alphabet"            { nb_colonne += 8; return TOK_ALPHABET; }
+"etats"               { nb_colonne += 5; return TOK_ETATS; }
+"initial"             { nb_colonne += 7; return TOK_INITIAL; }
+"finaux"              { nb_colonne += 6; return TOK_FINAUX; }
+"transitions"         { nb_colonne += 11; return TOK_TRANSITIONS; }
+"verifier"            { nb_colonne += 8; return TOK_VERIFIER; }
 
-"->"                  { return TOK_ARROW; }
+"->"                  { nb_colonne += 2; return TOK_ARROW; }
 
-[{};=:,]              { return yytext[0]; }
+[{};=:,]              { nb_colonne++; return yytext[0]; }
 
 \"[^\"]*\"            { 
-                        yytext[strlen(yytext)-1] = '\0';  /* Remove closing quote */
-                        yylval.str = strdup(yytext+1);     /* Skip opening quote */
+                        yytext[strlen(yytext)-1] = '\0';  /* 7yed guillemet li kaysd */
+                        yylval.str = strdup(yytext+1);     /* Tfet guillemet li kay7el */
+                        nb_colonne += strlen(yytext) + 1;
                         return TOK_STRING; 
                       }
 
-[a-z]                 { yylval.c = yytext[0]; return TOK_CHAR; }
+[a-z]                 { yylval.c = yytext[0]; nb_colonne++; return TOK_CHAR; }
 
-[a-zA-Z_][a-zA-Z0-9_]+ { yylval.str = strdup(yytext); return TOK_IDENTIFIER; }
-[A-Z_][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); return TOK_IDENTIFIER; }
+[a-zA-Z_][a-zA-Z0-9_]+ { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
+[A-Z_][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 
-.                     { /* Ignore unknown characters */ }
-
+.                     { nb_colonne++; /* Ignorer caracteres inconnus */ }
 
 %%
 

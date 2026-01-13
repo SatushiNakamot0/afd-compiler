@@ -1,1 +1,0 @@
-dex commandes :  flex nom fichier ---> puis lex.yy.c fichier generer --> gcc lex.yy.c -lfl 

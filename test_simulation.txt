@@ -1,0 +1,14 @@
+automate TestSimulation {
+    alphabet = {a, b};
+    etats = {q0, q1, q2};
+    initial = q0;
+    finaux = {q2};
+    transitions = {
+        q0:a->q1;
+        q1:b->q2;
+    };
+}
+
+verifier "ab";
+verifier "aa";
+verifier "aba";

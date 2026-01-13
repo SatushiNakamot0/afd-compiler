@@ -1,0 +1,15 @@
+digraph TestSimulation {
+    rankdir=LR;
+    node [shape=circle];
+
+    start [shape=point];
+    start -> q0;
+
+    node [shape=doublecircle];
+    q2;
+
+    node [shape=circle];
+
+    q0 -> q1 [label="a"];
+    q1 -> q2 [label="b"];
+}

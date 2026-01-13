@@ -1,7 +1,0 @@
-Je partage avec vous la partie 3 du TP.
-Suivez les conseils pour rédiger un analyseur syntaxique avec Bison pour notre langage A.
-Ce TP, ainsi que les TPs suivants + les améliorations que vous avez proposées, constituent le projet de ce module.
-Vous n’aurez donc pas à rendre chaque TP séparément.
-À la place, vous devrez rendre un seul projet à la fin, qui regroupe tous les TPs et les améliorations (vérifier la date limite du projet).
-Il est important de travailler sur les TPs progressivement, afin de pouvoir terminer le projet à temps.
-Bon courage!

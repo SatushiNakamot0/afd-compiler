@@ -1,9 +1,0 @@
-automate Test {
-    alphabet = {a, b};
-    etats = {q0, q1};
-    initial = q0;
-    finaux = {q1};
-    transitions = {
-        q0:a->q1;
-    };
-}

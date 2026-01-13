@@ -1,0 +1,10 @@
+automate TestNonDeterministe {
+    alphabet = {a, b};
+    etats = {q0, q1, q2};
+    initial = q0;
+    finaux = {q2};
+    transitions = {
+        q0:a->q1;
+        q0:a->q2;
+    };
+}

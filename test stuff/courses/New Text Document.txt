@@ -1,6 +1,0 @@
-Je partage avec vous le projet de ce module, sur lequel nous allons travailler tout au long de cette période restante.
-Dans ce projet, nous allons concevoir et implémenter ensemble un compilateur complet pour un langage spécialisé permettant de décrire des automates finis déterministes (AFD).
-
-Vous pouvez travailler seul ou en binôme, à condition d’être dans le même groupe (IT1, IT2 ou IT3) pour pouvoir travailler en binôme.
-
-Merci de remplir le formulaire ci-joint en indiquant votre nom et, si applicable, celui de votre binôme.  Pour les binômes, un seul membre du duo doit remplir le formulaire. 

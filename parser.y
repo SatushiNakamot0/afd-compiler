@@ -7,180 +7,303 @@
 void yyerror(const char *s);
 int yylex(void);
 
-Automaton *current_automaton = NULL;
+extern int nb_colonne;
+extern int yylineno;
 
-/* Helper Functions - Prototypes */
-Automaton* init_automaton(char* name);
-void add_symbol(char symbol);
-void add_state(char* state_name);
-void set_initial(char* state_name);
-void add_final(char* state_name);
-void add_transition(char* src, char sym, char* dest);
-int symbol_exists(char symbol);
-int state_exists(char* state_name);
+Automate *automate_actuel = NULL;
 
-/* Helper Functions - Implementation */
+/* Prototypes dyal fonctions auxiliaires */
+Automate* initialiser_automate(char* nom);
+void ajouter_symbole(char symbole);
+void ajouter_etat(char* nom_etat);
+void definir_initial(char* nom_etat);
+void ajouter_final(char* nom_etat);
+void ajouter_transition(char* src, char sym, char* dest);
+int symbole_existe(char symbole);
+int etat_existe(char* nom_etat);
+int transition_existe(char* src, char sym);
 
-Automaton* init_automaton(char* name) {
-    Automaton* automaton = (Automaton*)malloc(sizeof(Automaton));
-    if (!automaton) {
-        fprintf(stderr, "Error: Memory allocation failed\n");
+/* Implementation dyal fonctions auxiliaires */
+
+Automate* initialiser_automate(char* nom) {
+    Automate* automate = (Automate*)malloc(sizeof(Automate));
+    if (!automate) {
+        fprintf(stderr, "Erreur : Échec d'allocation mémoire\n");
         exit(1);
     }
     
-    automaton->name = strdup(name);
-    automaton->alphabet = NULL;
-    automaton->alphabet_count = 0;
-    automaton->states = NULL;
-    automaton->state_count = 0;
-    automaton->initial_state = NULL;
-    automaton->final_states = NULL;
-    automaton->final_count = 0;
-    automaton->transitions = NULL;
+    automate->nom = strdup(nom);
+    automate->alphabet = NULL;
+    automate->nb_symboles = 0;
+    automate->etats = NULL;
+    automate->nb_etats = 0;
+    automate->etat_initial = NULL;
+    automate->etats_finaux = NULL;
+    automate->nb_finaux = 0;
+    automate->transitions = NULL;
     
-    return automaton;
+    return automate;
 }
 
-void add_symbol(char symbol) {
-    if (!current_automaton) return;
+void ajouter_symbole(char symbole) {
+    if (!automate_actuel) return;
     
-    // Check for duplicates
-    for (int i = 0; i < current_automaton->alphabet_count; i++) {
-        if (current_automaton->alphabet[i][0] == symbol) {
-            return; // Symbol already exists
+    // Verifier doublons
+    for (int i = 0; i < automate_actuel->nb_symboles; i++) {
+        if (automate_actuel->alphabet[i][0] == symbole) {
+            return; // Rrmz deja kayyn
         }
     }
     
-    // Add symbol
-    current_automaton->alphabet = (char**)realloc(
-        current_automaton->alphabet, 
-        sizeof(char*) * (current_automaton->alphabet_count + 1)
+    // Zid rrmz
+    automate_actuel->alphabet = (char**)realloc(
+        automate_actuel->alphabet, 
+        sizeof(char*) * (automate_actuel->nb_symboles + 1)
     );
-    current_automaton->alphabet[current_automaton->alphabet_count] = (char*)malloc(2);
-    current_automaton->alphabet[current_automaton->alphabet_count][0] = symbol;
-    current_automaton->alphabet[current_automaton->alphabet_count][1] = '\0';
-    current_automaton->alphabet_count++;
+    automate_actuel->alphabet[automate_actuel->nb_symboles] = (char*)malloc(2);
+    automate_actuel->alphabet[automate_actuel->nb_symboles][0] = symbole;
+    automate_actuel->alphabet[automate_actuel->nb_symboles][1] = '\0';
+    automate_actuel->nb_symboles++;
 }
 
-void add_state(char* state_name) {
-    if (!current_automaton) return;
+void ajouter_etat(char* nom_etat) {
+    if (!automate_actuel) return;
     
-    // Check for duplicates
-    for (int i = 0; i < current_automaton->state_count; i++) {
-        if (strcmp(current_automaton->states[i], state_name) == 0) {
-            return; // State already exists
+    // Verifier doublons
+    for (int i = 0; i < automate_actuel->nb_etats; i++) {
+        if (strcmp(automate_actuel->etats[i], nom_etat) == 0) {
+            return; // L'etat deja kayyn
         }
     }
     
-    // Add state
-    current_automaton->states = (char**)realloc(
-        current_automaton->states,
-        sizeof(char*) * (current_automaton->state_count + 1)
+    // Zid l'etat
+    automate_actuel->etats = (char**)realloc(
+        automate_actuel->etats,
+        sizeof(char*) * (automate_actuel->nb_etats + 1)
     );
-    current_automaton->states[current_automaton->state_count] = strdup(state_name);
-    current_automaton->state_count++;
+    automate_actuel->etats[automate_actuel->nb_etats] = strdup(nom_etat);
+    automate_actuel->nb_etats++;
 }
 
-int symbol_exists(char symbol) {
-    if (!current_automaton) return 0;
+int symbole_existe(char symbole) {
+    if (!automate_actuel) return 0;
     
-    for (int i = 0; i < current_automaton->alphabet_count; i++) {
-        if (current_automaton->alphabet[i][0] == symbol) {
+    for (int i = 0; i < automate_actuel->nb_symboles; i++) {
+        if (automate_actuel->alphabet[i][0] == symbole) {
             return 1;
         }
     }
     return 0;
 }
 
-int state_exists(char* state_name) {
-    if (!current_automaton) return 0;
+int etat_existe(char* nom_etat) {
+    if (!automate_actuel) return 0;
     
-    for (int i = 0; i < current_automaton->state_count; i++) {
-        if (strcmp(current_automaton->states[i], state_name) == 0) {
+    for (int i = 0; i < automate_actuel->nb_etats; i++) {
+        if (strcmp(automate_actuel->etats[i], nom_etat) == 0) {
             return 1;
         }
     }
     return 0;
 }
 
-void set_initial(char* state_name) {
-    if (!current_automaton) return;
+// FEATURE #1: Verifier determinisme
+int transition_existe(char* src, char sym) {
+    if (!automate_actuel) return 0;
     
-    // Semantic check: Verify state exists
-    if (!state_exists(state_name)) {
-        fprintf(stderr, "Error: State '%s' not declared\n", state_name);
-        exit(1);
+    Transition* t = automate_actuel->transitions;
+    while (t) {
+        if (strcmp(t->source, src) == 0 && t->symbol == sym) {
+            return 1; // Deja kayna transition mn had l'etat b had rrmz
+        }
+        t = t->next;
     }
-    
-    current_automaton->initial_state = strdup(state_name);
-    printf("Initial state set: %s\n", state_name);
+    return 0;
 }
 
-void add_final(char* state_name) {
-    if (!current_automaton) return;
+void definir_initial(char* nom_etat) {
+    if (!automate_actuel) return;
     
-    // Semantic check: Verify state exists
-    if (!state_exists(state_name)) {
-        fprintf(stderr, "Error: State '%s' not declared\n", state_name);
+    // Verification semantique : l'etat khasso ykoun kayyn
+    if (!etat_existe(nom_etat)) {
+        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", nom_etat);
         exit(1);
     }
     
-    // Check for duplicates
-    for (int i = 0; i < current_automaton->final_count; i++) {
-        if (strcmp(current_automaton->final_states[i], state_name) == 0) {
-            return; // Already a final state
+    automate_actuel->etat_initial = strdup(nom_etat);
+}
+
+void ajouter_final(char* nom_etat) {
+    if (!automate_actuel) return;
+    
+    // Verification semantique : l'etat khasso ykoun kayyn
+    if (!etat_existe(nom_etat)) {
+        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", nom_etat);
+        exit(1);
+    }
+    
+    // Verifier doublons
+    for (int i = 0; i < automate_actuel->nb_finaux; i++) {
+        if (strcmp(automate_actuel->etats_finaux[i], nom_etat) == 0) {
+            return; // Deja etat final
         }
     }
     
-    // Add final state
-    current_automaton->final_states = (char**)realloc(
-        current_automaton->final_states,
-        sizeof(char*) * (current_automaton->final_count + 1)
+    // Zid l'etat final
+    automate_actuel->etats_finaux = (char**)realloc(
+        automate_actuel->etats_finaux,
+        sizeof(char*) * (automate_actuel->nb_finaux + 1)
     );
-    current_automaton->final_states[current_automaton->final_count] = strdup(state_name);
-    current_automaton->final_count++;
+    automate_actuel->etats_finaux[automate_actuel->nb_finaux] = strdup(nom_etat);
+    automate_actuel->nb_finaux++;
 }
 
-void add_transition(char* src, char sym, char* dest) {
-    if (!current_automaton) return;
+void ajouter_transition(char* src, char sym, char* dest) {
+    if (!automate_actuel) return;
     
-    // Semantic check: Verify symbol exists in alphabet
-    if (!symbol_exists(sym)) {
-        fprintf(stderr, "Error: Symbol '%c' not declared in alphabet\n", sym);
+    // Verification semantique : rrmz khasso ykoun f l'alphabet
+    if (!symbole_existe(sym)) {
+        fprintf(stderr, "Erreur semantique (Ligne %d, Col %d): Had rrmz '%c' ma-kaynch f l'alphabet!\n", 
+                yylineno, nb_colonne, sym);
         exit(1);
     }
     
-    // Semantic check: Verify source state exists
-    if (!state_exists(src)) {
-        fprintf(stderr, "Error: State '%s' not declared\n", src);
+    // Verification semantique : l'etat source khasso ykoun kayyn
+    if (!etat_existe(src)) {
+        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", src);
         exit(1);
     }
     
-    // Semantic check: Verify destination state exists
-    if (!state_exists(dest)) {
-        fprintf(stderr, "Error: State '%s' not declared\n", dest);
+    // Verification semantique : l'etat destination khasso ykoun kayyn
+    if (!etat_existe(dest)) {
+        fprintf(stderr, "Erreur semantique: Had l'etat '%s' ma-declarich f 'etats'.\n", dest);
         exit(1);
     }
     
-    // Create new transition
-    Transition* new_transition = (Transition*)malloc(sizeof(Transition));
-    new_transition->source = strdup(src);
-    new_transition->symbol = sym;
-    new_transition->destination = strdup(dest);
-    new_transition->next = NULL;
+    // FEATURE #1: Verifier determinisme - ma-ykounech jouj transitions mn nfs l'etat b nfs rrmz
+    if (transition_existe(src, sym)) {
+        fprintf(stderr, "Erreur Non-Deterministe: L'etat '%s' 3ando deja transition b rrmz '%c'! L'automate khasso ykoun Deterministe a btal.\n", src, sym);
+        exit(1);
+    }
     
-    // Add to linked list
-    if (!current_automaton->transitions) {
-        current_automaton->transitions = new_transition;
+    // Khlq transition jdida
+    Transition* nouvelle_transition = (Transition*)malloc(sizeof(Transition));
+    nouvelle_transition->source = strdup(src);
+    nouvelle_transition->symbol = sym;
+    nouvelle_transition->destination = strdup(dest);
+    nouvelle_transition->next = NULL;
+    
+    // Zidha l liste chainee
+    if (!automate_actuel->transitions) {
+        automate_actuel->transitions = nouvelle_transition;
     } else {
-        Transition* temp = current_automaton->transitions;
+        Transition* temp = automate_actuel->transitions;
         while (temp->next) {
             temp = temp->next;
         }
-        temp->next = new_transition;
+        temp->next = nouvelle_transition;
+    }
+}
+
+// FEATURE #2: Simulateur - Helper functions
+int est_etat_final(Automate *a, char *etat) {
+    for (int i = 0; i < a->nb_finaux; i++) {
+        if (strcmp(a->etats_finaux[i], etat) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+Transition* trouver_transition(Automate *a, char *etat_src, char symbole) {
+    Transition* t = a->transitions;
+    while (t) {
+        if (strcmp(t->source, etat_src) == 0 && t->symbol == symbole) {
+            return t;
+        }
+        t = t->next;
+    }
+    return NULL;
+}
+
+// FEATURE #2: Simulateur - Execution
+void executer_automate(Automate *a, char *mot) {
+    if (!a || !a->etat_initial) {
+        fprintf(stderr, "Erreur: L'automate machi complet.\n");
+        return;
     }
     
-    printf("Transition added: %s : %c -> %s\n", src, sym, dest);
+    char *etat_courant = a->etat_initial;
+    printf("\n--- Simulation dyal l'mot '%s' ---\n", mot);
+    printf("Bdit mn l'etat: %s\n", etat_courant);
+    
+    for (int i = 0; mot[i] != '\0'; i++) {
+        char symbole = mot[i];
+        printf("  Qra rrmz '%c'... ", symbole);
+        
+        Transition* t = trouver_transition(a, etat_courant, symbole);
+        if (!t) {
+            printf("\n\nDommage... L'mot '%s' merfoud (Rejete).\n", mot);
+            printf("Sebab: Ma-kaynach transition mn '%s' b rrmz '%c'.\n", etat_courant, symbole);
+            return;
+        }
+        
+        printf("-> %s\n", t->destination);
+        etat_courant = t->destination;
+    }
+    
+    // Chof wach wselna l etat final
+    if (est_etat_final(a, etat_courant)) {
+        printf("\nNadi! L'mot '%s' maqboule (Accepte).\n", mot);
+        printf("Weselna l l'etat final: %s\n\n", etat_courant);
+    } else {
+        printf("\nDommage... L'mot '%s' merfoud (Rejete).\n", mot);
+        printf("Weselna l '%s' li machi etat final.\n\n", etat_courant);
+    }
+}
+
+// FEATURE #3: Graphviz Export
+void generer_dot(Automate *a) {
+    if (!a) return;
+    
+    char filename[256];
+    snprintf(filename, sizeof(filename), "%s.dot", a->nom);
+    
+    FILE *f = fopen(filename, "w");
+    if (!f) {
+        fprintf(stderr, "Erreur: Ma-qdertnach n7el fichier '%s'.\n", filename);
+        return;
+    }
+    
+    fprintf(f, "digraph %s {\n", a->nom);
+    fprintf(f, "    rankdir=LR;\n");
+    fprintf(f, "    node [shape=circle];\n\n");
+    
+    // Etat initial - flech mn berra
+    if (a->etat_initial) {
+        fprintf(f, "    start [shape=point];\n");
+        fprintf(f, "    start -> %s;\n\n", a->etat_initial);
+    }
+    
+    // Etats finaux - double cercle
+    fprintf(f, "    node [shape=doublecircle];\n");
+    for (int i = 0; i < a->nb_finaux; i++) {
+        fprintf(f, "    %s;\n", a->etats_finaux[i]);
+    }
+    fprintf(f, "\n    node [shape=circle];\n\n");
+    
+    // Transitions
+    Transition* t = a->transitions;
+    while (t) {
+        fprintf(f, "    %s -> %s [label=\"%c\"];\n", t->source, t->destination, t->symbol);
+        t = t->next;
+    }
+    
+    fprintf(f, "}\n");
+    fclose(f);
+    
+    printf("Fichier Graphviz '%s' genere! Dir 'dot -Tpng %s -o %s.png' bach tchouf l'graphe.\n\n", 
+           filename, filename, a->nom);
 }
 
 %}
@@ -200,28 +323,49 @@ void add_transition(char* src, char sym, char* dest) {
 %%
 
 program:
-    automate_def
+    automate_def commandes_opt
     {
-        printf("\n✅ Automaton '%s' validated successfully!\n", current_automaton->name);
-        printf("   States: %d, Alphabet: %d, Transitions: ", 
-               current_automaton->state_count, 
-               current_automaton->alphabet_count);
+        printf("Nadi! L'automate '%s' mrigl (valide).\n", automate_actuel->nom);
+        printf("Details:\n");
+        printf(" - Nombre d'etats: %d\n", automate_actuel->nb_etats);
+        printf(" - Taille de l'alphabet: %d\n", automate_actuel->nb_symboles);
         
-        int transition_count = 0;
-        Transition* t = current_automaton->transitions;
+        int nb_transitions = 0;
+        Transition* t = automate_actuel->transitions;
         while (t) {
-            transition_count++;
+            nb_transitions++;
             t = t->next;
         }
-        printf("%d\n", transition_count);
+        printf(" - Nombre de transitions: %d\n", nb_transitions);
+        
+        // Auto-generer fichier DOT
+        generer_dot(automate_actuel);
+    }
+    ;
+
+commandes_opt:
+    /* vide */
+    | commandes
+    ;
+
+commandes:
+    commande
+    | commandes commande
+    ;
+
+commande:
+    TOK_VERIFIER TOK_STRING ';'
+    {
+        executer_automate(automate_actuel, $2);
+        free($2);
     }
     ;
 
 automate_def:
     TOK_AUTOMATE identifier '{' 
     {
-        current_automaton = init_automaton($2);
-        printf("Parsing automaton: %s\n", $2);
+        automate_actuel = initialiser_automate($2);
+        printf("Bdit kan-analysi l'automate: %s...\n", $2);
     }
     sections '}'
     {
@@ -253,11 +397,11 @@ alphabet_section:
 char_list:
     TOK_CHAR
     {
-        add_symbol($1);
+        ajouter_symbole($1);
     }
     | char_list ',' TOK_CHAR
     {
-        add_symbol($3);
+        ajouter_symbole($3);
     }
     ;
 
@@ -268,12 +412,12 @@ etats_section:
 identifier_list:
     identifier 
     { 
-        add_state($1);
+        ajouter_etat($1);
         free($1); 
     }
     | identifier_list ',' identifier 
     { 
-        add_state($3);
+        ajouter_etat($3);
         free($3); 
     }
     ;
@@ -281,7 +425,7 @@ identifier_list:
 initial_section:
     TOK_INITIAL '=' identifier ';'
     {
-        set_initial($3);
+        definir_initial($3);
         free($3);
     }
     ;
@@ -293,12 +437,12 @@ finaux_section:
 final_list:
     identifier
     {
-        add_final($1);
+        ajouter_final($1);
         free($1);
     }
     | final_list ',' identifier
     {
-        add_final($3);
+        ajouter_final($3);
         free($3);
     }
     ;
@@ -315,7 +459,7 @@ transition_list:
 transition:
     identifier ':' TOK_CHAR TOK_ARROW identifier ';'
     {
-        add_transition($1, $3, $5);
+        ajouter_transition($1, $3, $5);
         free($1);
         free($5);
     }
@@ -324,7 +468,7 @@ transition:
 %%
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Syntax error: %s\n", s);
+    fprintf(stderr, "Erreur Syntaxique f la ligne %d, colonne %d: Kayn chi mochkil hna!\n", yylineno, nb_colonne);
 }
 
 int main(int argc, char **argv) {
@@ -338,15 +482,15 @@ int main(int argc, char **argv) {
         yyin = f;
     }
     
-    printf("🔍 Parsing DFA definition...\n\n");
+    printf("--- Mulakhass ---\n");
     if (yyparse() == 0) {
-        printf("\n📊 Summary:\n");
-        printf("   Automaton Name: %s\n", current_automaton->name);
-        printf("   Initial State: %s\n", current_automaton->initial_state);
-        printf("   Final States: ");
-        for (int i = 0; i < current_automaton->final_count; i++) {
-            printf("%s", current_automaton->final_states[i]);
-            if (i < current_automaton->final_count - 1) printf(", ");
+        printf("\n");
+        printf("Smya: %s\n", automate_actuel->nom);
+        printf("Etat Initial: %s\n", automate_actuel->etat_initial);
+        printf("Etats Finaux: ");
+        for (int i = 0; i < automate_actuel->nb_finaux; i++) {
+            printf("%s", automate_actuel->etats_finaux[i]);
+            if (i < automate_actuel->nb_finaux - 1) printf(", ");
         }
         printf("\n");
     }

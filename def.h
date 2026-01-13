@@ -6,29 +6,35 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 1. Structure for a single transition
-//    Example: "q0 : a -> q1"
+// Structure dyal transition wahda
+// Matalan: "q0 : a -> q1"
 typedef struct Transition {
-    char *source;              // e.g., "q0"
-    char symbol;               // e.g., 'a'
-    char *destination;         // e.g., "q1"
-    struct Transition *next;   // Pointer to the next transition (Linked List)
+    char *source;              // L'etat li jayy mnha (ex: "q0")
+    char symbol;               // Rrmz dyal transition (ex: 'a')
+    char *destination;         // L'etat li ghadi liha (ex: "q1")
+    struct Transition *next;   // Pointer l transition li jaya (Liste chainee)
 } Transition;
 
-// 2. Structure for the whole Automaton
-typedef struct Automaton {
-    char *name;                // Name of the automaton
-    char **alphabet;           // List of allowed symbols
-    int alphabet_count;
-    char **states;             // List of declared states
-    int state_count;
-    char *initial_state;       // The start state
-    char **final_states;       // List of final states
-    int final_count;
-    Transition *transitions;   // Head of the linked list of transitions
-} Automaton;
+// Structure dyal l'automate kamla
+typedef struct Automate {
+    char *nom;                 // Smya dyal l'automate
+    char **alphabet;           // Lista dyal rrmoz msmo7in
+    int nb_symboles;           // 3dad dyal rrmoz f l'alphabet
+    char **etats;              // Lista dyal etats li declarinhom
+    int nb_etats;              // 3dad dyal etats
+    char *etat_initial;        // L'etat li kabda biha
+    char **etats_finaux;       // Lista dyal etats finaux
+    int nb_finaux;             // 3dad dyal etats finaux
+    Transition *transitions;   // Rras dyal liste chainee dyal transitions
+} Automate;
 
-// Global pointer so the Parser can access the automaton being built
-extern Automaton *current_automaton;
+// Pointeur global bach Parser ykoun 3ndo access l l'automate li kanbenou
+extern Automate *automate_actuel;
+
+// Prototypes dyal fonctions avancees
+void executer_automate(Automate *a, char *mot);
+void generer_dot(Automate *a);
+int est_etat_final(Automate *a, char *etat);
+Transition* trouver_transition(Automate *a, char *etat_src, char symbole);
 
 #endif

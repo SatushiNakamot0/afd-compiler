@@ -1,0 +1,150 @@
+================================================================================
+                RAPPORT DES AMÉLIORATIONS ET EXTENSIONS
+             Compilateur AFD - Théorie des Langages et Compilation
+================================================================================
+
+Étudiant : Yazid TAHIRI ALAOUI
+Module   : TDIA (Théorie des langages et compilation)
+Sujet    : Projet AFD - TP2 et TP3
+
+
+INTRODUCTION
+============
+
+Dans le cadre de ce projet, j'ai souhaité aller au-delà des spécifications 
+de base du TP2 et TP3 afin de produire un compilateur plus robuste, plus 
+strict et capable de véritables fonctionnalités d'exécution.
+
+Voici la liste détaillée des améliorations techniques et fonctionnelles 
+implémentées.
+
+
+I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
+======================================================
+
+1. Positionnement précis des erreurs (Tracking Ligne & Colonne)
+----------------------------------------------------------------
+
+   CONSTAT :
+   L'analyseur standard indiquait seulement la ligne de l'erreur, ce qui 
+   est imprécis pour le débogage de longues lignes de code.
+
+   AMÉLIORATION :
+   J'ai implémenté un compteur de colonnes (nb_colonne) dans le lexer. 
+   À chaque token lu, le compteur s'incrémente de la longueur du mot 
+   (yyleng). Le compilateur peut désormais afficher des erreurs précises 
+   du type :
+   
+       "Erreur syntaxique ligne 10, colonne 5"
+
+   IMPACT :
+   Débogage beaucoup plus rapide et précis pour l'utilisateur.
+
+
+2. Architecture Modulaire (Communication Lexer-Parser)
+-------------------------------------------------------
+
+   CONSTAT :
+   La première version du lexer se contentait d'afficher les tokens 
+   (printf) sans les transmettre.
+
+   AMÉLIORATION :
+   J'ai restructuré le projet pour une véritable communication compilateur :
+   - Le lexer retourne des codes entiers (TOK_AUTOMATE, TOK_IDENTIFIER)
+   - Les valeurs sémantiques sont transmises via l'union yylval
+   - Communication bidirectionnelle Flex ↔ Bison
+
+   IMPACT :
+   Architecture conforme aux standards des compilateurs professionnels.
+
+
+3. Gestion Optimisée des Chaînes de Caractères
+-----------------------------------------------
+
+   CONSTAT :
+   L'analyse caractère par caractère des mots entre guillemets était 
+   fastidieuse.
+
+   AMÉLIORATION :
+   J'ai défini une expression régulière Flex (\"[^\"]*\") qui capture 
+   l'intégralité d'une chaîne de caractères en une seule opération.
+
+   IMPACT :
+   Simplification du traitement et meilleure performance.
+
+
+4. Table des Symboles Intégrée
+-------------------------------
+
+   CONSTAT :
+   Un compilateur doit "se souvenir" des déclarations pour valider 
+   la logique.
+
+   AMÉLIORATION :
+   J'ai utilisé la structure C struct Automate comme une véritable 
+   Table des Symboles. Avant d'accepter une transition ou un état 
+   initial, le compilateur vérifie dynamiquement dans cette structure 
+   si l'identifiant a bien été déclaré dans les listes 'etats' ou 
+   'alphabet'.
+
+   IMPACT :
+   Validation sémantique complète - détection des erreurs à la  
+   compilation plutôt qu'à l'exécution.
+
+
+II. FONCTIONNALITÉS AVANCÉES (EXTENSIONS DU PROJET)
+====================================================
+
+5. Vérification Stricte du Déterminisme (Conformité AFD)
+---------------------------------------------------------
+
+   OBJECTIF :
+   Le cahier des charges exige un Automate Fini Déterministe.
+
+   IMPLÉMENTATION :
+   J'ai ajouté une logique de validation sémantique qui interdit les 
+   transitions ambiguës. Si l'utilisateur tente de définir deux 
+   transitions partant du même état avec le même symbole 
+   (ex: q0:a->q1 et q0:a->q2), le compilateur détecte l'erreur et 
+   arrête la compilation immédiatement.
+
+   IMPACT :
+   Garantie mathématique que l'automate généré est déterministe.
+
+
+6. Moteur de Simulation (Exécution Réelle)
+-------------------------------------------
+
+   OBJECTIF :
+   Rendre la commande 'verifier' fonctionnelle.
+
+   IMPLÉMENTATION :
+   Au lieu de simplement parser la commande verifier, mon compilateur 
+   exécute l'automate. Il parcourt les transitions en mémoire avec le 
+   mot fourni et détermine algorithmiquement si le mot est :
+   - ACCEPTÉ (fin sur un état final)
+   - REJETÉ (pas de transition ou fin sur état non-final)
+
+   IMPACT :
+   Véritable outil de test pour l'utilisateur.
+
+
+7. Visualisation Graphique (Export Graphviz)
+---------------------------------------------
+
+   OBJECTIF :
+   Faciliter la compréhension de l'automate construit.
+
+   IMPLÉMENTATION :
+   Le compilateur génère automatiquement un fichier .dot (format 
+   Graphviz) représentant l'automate. L'utilisateur peut ainsi 
+   visualiser graphiquement les états et les transitions de son 
+   automate après la compilation.
+
+   IMPACT :
+   Aide pédagogique pour comprendre la structure de l'automate.
+
+
+================================================================================
+                              FIN DU RAPPORT
+================================================================================
