@@ -9,7 +9,7 @@ Sujet    : Projet AFD - TP2 et TP3
 
 
 INTRODUCTION
-============
+
 
 Dans le cadre de ce projet, j'ai souhaité aller au-delà des spécifications 
 de base du TP2 et TP3 afin de produire un compilateur plus robuste, plus 
@@ -20,10 +20,9 @@ implémentées.
 
 
 I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
-======================================================
 
 1. Positionnement précis des erreurs (Tracking Ligne & Colonne)
-----------------------------------------------------------------
+
 
    CONSTAT :
    L'analyseur standard indiquait seulement la ligne de l'erreur, ce qui 
@@ -42,7 +41,6 @@ I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
 
 
 2. Architecture Modulaire (Communication Lexer-Parser)
--------------------------------------------------------
 
    CONSTAT :
    La première version du lexer se contentait d'afficher les tokens 
@@ -59,7 +57,7 @@ I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
 
 
 3. Gestion Optimisée des Chaînes de Caractères
------------------------------------------------
+
 
    CONSTAT :
    L'analyse caractère par caractère des mots entre guillemets était 
@@ -74,7 +72,7 @@ I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
 
 
 4. Table des Symboles Intégrée
--------------------------------
+
 
    CONSTAT :
    Un compilateur doit "se souvenir" des déclarations pour valider 
@@ -93,13 +91,10 @@ I. AMÉLIORATIONS DE L'ANALYSEUR LEXICAL ET SYNTAXIQUE
 
 
 II. FONCTIONNALITÉS AVANCÉES (EXTENSIONS DU PROJET)
-====================================================
+
 
 5. Vérification Stricte du Déterminisme (Conformité AFD)
----------------------------------------------------------
 
-   OBJECTIF :
-   Le cahier des charges exige un Automate Fini Déterministe.
 
    IMPLÉMENTATION :
    J'ai ajouté une logique de validation sémantique qui interdit les 
@@ -113,10 +108,7 @@ II. FONCTIONNALITÉS AVANCÉES (EXTENSIONS DU PROJET)
 
 
 6. Moteur de Simulation (Exécution Réelle)
--------------------------------------------
 
-   OBJECTIF :
-   Rendre la commande 'verifier' fonctionnelle.
 
    IMPLÉMENTATION :
    Au lieu de simplement parser la commande verifier, mon compilateur 
@@ -130,21 +122,17 @@ II. FONCTIONNALITÉS AVANCÉES (EXTENSIONS DU PROJET)
 
 
 7. Visualisation Graphique (Export Graphviz)
----------------------------------------------
+
 
    OBJECTIF :
-   Faciliter la compréhension de l'automate construit.
+   faciliter la compréhension de l'automate construit.
 
    IMPLÉMENTATION :
    Le compilateur génère automatiquement un fichier .dot (format 
-   Graphviz) représentant l'automate. L'utilisateur peut ainsi 
+   Graphviz (hadi bach ndiro visualisation)) représentant l'automate. L'utilisateur peut ainsi 
    visualiser graphiquement les états et les transitions de son 
    automate après la compilation.
 
    IMPACT :
    Aide pédagogique pour comprendre la structure de l'automate.
 
-
-================================================================================
-                              FIN DU RAPPORT
-================================================================================

@@ -9,20 +9,20 @@
 // Structure dyal transition wahda
 // Matalan: "q0 : a -> q1"
 typedef struct Transition {
-    char *source;              // Mn fin jayin
-    char symbol;      // Rrmz
-    char *destination;         // Fin ghadin
-    struct Transition *next;   // Liste chainee (attention pointeurs !!)
+    char *source;              
+    char symbol;      
+    char *destination;         
+    struct Transition *next;   
 } Transition;
 
 // Structure dyal l'automate
 typedef struct Automate {
     char *nom; 
-    char **alphabet;           // Tableau dynamique
+    char **alphabet;          
     int nb_symboles;
     
     char **etats;
-    int nb_etats;              // ch7al mn etat 3ndna
+    int nb_etats;             
     
     char *etat_initial;
     
@@ -35,7 +35,7 @@ typedef struct Automate {
 // Pointeur global (bach ykoun accessible f parser.y)
 extern Automate *automate_actuel;
 
-/* Prototypes */
+
 void executer_automate(Automate *a, char *mot);
 void generer_dot(Automate *a);
 int est_etat_final(Automate  *a, char *etat);

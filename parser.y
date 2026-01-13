@@ -52,6 +52,7 @@ void ajouter_symbole(char symbole) {
     if (!automate_actuel) return;
     
     // Boucle pour verifier les doublons
+    
     for (int i = 0; i < automate_actuel->nb_symboles; i++) {
         if (automate_actuel->alphabet[i][0] == symbole) {
             return; // Deja kayn
@@ -449,8 +450,8 @@ transition:
     identifier ':' TOK_CHAR TOK_ARROW identifier ';'
     {
         ajouter_transition($1, $3, $5);
-        free($1);
-        free($5);
+        free($1); // khassna nkhwiw la memoire hitach salina biha
+        free($5); // nfs chi hna (dest), sinon ghadi ybqa lleak
         // printf("Debug: transition ajoutee\n");
     }
     ;

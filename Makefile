@@ -39,9 +39,7 @@ clean:
 rebuild: clean all
 
 help:
-	@echo "========================================================"
-	@echo "   Makefile - Compilateur AFD (TP2/TP3)               "
-	@echo "========================================================"
+	@echo "   Makefile - Compilateur AFD              "
 	@echo ""
 	@echo "Cibles:"
 	@echo "  make          - Compile le compilateur AFD"

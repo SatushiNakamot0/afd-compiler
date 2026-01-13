@@ -7,16 +7,13 @@
 int nb_colonne = 1;
 %}
 
-%option noinput
-%option nounput
-
 %%
 
 [ \t]+                { nb_colonne += strlen(yytext); /* Ignorer les espaces */ }
 
 \n                    { nb_colonne = 1; /* rje3 l star jdid */ }
 
-#.*                   { /* Commentaire : on fait rien */ }
+#.*                   { /* Commentaire : makandiro walo */ }
 
 "automate"            { nb_colonne += 9; return TOK_AUTOMATE; }
 "alphabet"            { nb_colonne += 8; return TOK_ALPHABET; }
@@ -31,8 +28,8 @@ int nb_colonne = 1;
 [{};=:,]              { nb_colonne++; return yytext[0]; }
 
 \"[^\"]*\"            { 
-                        // Traitement des chaines de caracteres
-                        // printf("DEBUG: Chaine trouvee: %s\n", yytext);
+                        //chaines de caracteres
+                        // printf("DEBUG: Chaine trouvee: %s", yytext);
                         yytext[strlen(yytext)-1] = '\0';
                         yylval.str = strdup(yytext+1);
                         nb_colonne += strlen(yytext) + 1;
@@ -50,7 +47,7 @@ int nb_colonne = 1;
 
 [A-Z_][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); nb_colonne += strlen(yytext); return TOK_IDENTIFIER; }
 
-.                     { nb_colonne++; /* Caractere inconnu ? */ }
+.                     { nb_colonne++; /* Caractere mam3roufch ? */ }
 
 %%
 
